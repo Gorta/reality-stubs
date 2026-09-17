@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>TorqueCraft Auto Parts — Premium car components & accessories</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230B1C2F'/><text x='50' y='72' font-size='62' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>⚙</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --primary: #0B1C2F;
+            --accent: #E63946;
+            --accent-hover: #c1121f;
+            --light-bg: #F8F9FC;
+            --gray-bg: #EDF2F7;
+            --text-dark: #1A202C;
+            --text-muted: #4A5568;
+            --border-light: #E2E8F0;
+            --card-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.08), 0 4px 12px -4px rgba(0, 0, 0, 0.02);
+            --transition: all 0.2s ease;
+        }
+
+        body {
+            background: white;
+            color: var(--text-dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--accent);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            line-height: 1;
+            box-shadow: 0 8px 12px -4px rgba(230, 57, 70, 0.25);
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .cart-btn {
+            background: var(--gray-bg);
+            border: none;
+            border-radius: 40px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .cart-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .cart-count {
+            background: var(--accent);
+            color: white;
+            border-radius: 30px;
+            padding: 2px 8px;
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 40px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+            box-shadow: 0 8px 16px -6px rgba(230, 57, 70, 0.3);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 20px -8px rgba(230, 57, 70, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+            box-shadow: none;
+            padding: 10px 24px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 16px -6px rgba(11, 28, 47, 0.2);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 60px 0 40px;
+            background: linear-gradient(135deg, #fbfdff 0%, #f0f4fa 100%);
+        }
+
+        .hero-grid {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 380px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(230, 57, 70, 0.1);
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 6px 16px;
+            border-radius: 40px;
+            margin-bottom: 22px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border-light);
+            padding-top: 28px;
+        }
+
+        .stat-item h4 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .hero-image {
+            flex: 1 1 360px;
+            background: #d9e2ec;
+            height: 340px;
+            border-radius: 32px;
+            background-image: radial-gradient(circle at 30% 40%, #ffffff30 0%, #0b1c2f20 90%),
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300"><rect width="400" height="300" fill="%23cdd9e6"/><circle cx="140" cy="140" r="60" fill="%234a5568" opacity="0.2"/><circle cx="280" cy="180" r="45" fill="%23e63946" opacity="0.15"/><path d="M60 230 L340 230" stroke="%23a0aec0" stroke-width="4" stroke-linecap="round" opacity="0.5"/><rect x="80" y="100" width="100" height="70" rx="12" fill="%23a0aec0" opacity="0.3"/><rect x="230" y="80" width="90" height="100" rx="16" fill="%230b1c2f" opacity="0.1"/></svg>');
+            background-size: cover, cover;
+            background-blend-mode: overlay, normal;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image::after {
+            content: "⚙️ OEM & Performance";
+            background: white;
+            padding: 12px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ===== CATEGORIES ===== */
+        .categories {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+        }
+
+        .cat-card {
+            background: var(--light-bg);
+            border-radius: 24px;
+            padding: 32px 20px 28px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--border-light);
+            cursor: default;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow);
+            border-color: transparent;
+            background: white;
+        }
+
+        .cat-emoji {
+            font-size: 2.8rem;
+            margin-bottom: 18px;
+            display: block;
+        }
+
+        .cat-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .cat-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== PRODUCTS ===== */
+        .products {
+            padding: 70px 0 80px;
+            background: var(--light-bg);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px 20px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+            border: 1px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow);
+            border-color: #e9eef3;
+        }
+
+        .product-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+            background: rgba(230, 57, 70, 0.08);
+            padding: 4px 10px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 18px;
+        }
+
+        .product-price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-left: 4px;
+        }
+
+        .add-to-cart {
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        .add-to-cart:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ===== FEATURES / WHY US ===== */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 32px;
+            margin-top: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--light-bg);
+            border-radius: 20px;
+            padding: 28px 24px;
+            transition: var(--transition);
+        }
+
+        .feature-item:hover {
+            background: #f0f4fa;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .feature-item h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .feature-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ===== TESTIMONIAL ===== */
+        .testimonial {
+            padding: 60px 0 80px;
+            background: var(--primary);
+            color: white;
+            border-radius: 0;
+        }
+
+        .testimonial .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .testimonial-quote {
+            font-size: 1.6rem;
+            font-weight: 500;
+            max-width: 800px;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+            margin-bottom: 28px;
+            font-style: normal;
+            color: #ffffff;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .testimonial-author span {
+            color: white;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        /* ===== CTA ===== */
+        .cta-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .cta-box {
+            background: linear-gradient(105deg, #f8fafd 0%, #e9f0f7 100%);
+            border-radius: 40px;
+            padding: 56px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--card-shadow);
+        }
+
+        .cta-text h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .cta-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0d1b2a;
+            color: #cbd5e0;
+            padding: 60px 0 30px;
+            margin-top: 0;
+            font-size: 0.95rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+
+        .footer h5 {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            letter-spacing: 0.01em;
+        }
+
+        .footer ul {
+            list-style: none;
+        }
+
+        .footer li {
+            margin-bottom: 12px;
+        }
+
+        .footer a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
+        .footer-contact p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #1e2e3f;
+            padding-top: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: #8fa1b3;
+        }
+
+        .footer-bottom a {
+            color: #8fa1b3;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            color: white;
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 800px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .nav {
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+
+            .hero p {
+                font-size: 1.05rem;
+            }
+
+            .hero-grid {
+                gap: 30px;
+            }
+
+            .hero-image {
+                height: 260px;
+            }
+
+            .section-title {
+                font-size: 1.9rem;
+            }
+
+            .cta-box {
+                padding: 36px 28px;
+            }
+
+            .cta-text h2 {
+                font-size: 1.7rem;
+            }
+
+            .testimonial-quote {
+                font-size: 1.3rem;
+            }
+
+            .footer-grid {
+                gap: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 18px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+
+            .stat-item h4 {
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 11px 22px;
+                font-size: 0.9rem;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+
+            .cat-card {
+                padding: 20px 10px;
+            }
+
+            .cat-emoji {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚙️</span>
+                TorqueCraft
+            </a>
+            <nav class="nav">
+                <a href="#">Shop</a>
+                <a href="#">Brands</a>
+                <a href="#">Deals</a>
+                <a href="#">Guides</a>
+                <a href="#">Support</a>
+            </nav>
+            <div class="header-actions">
+                <button class="cart-btn" id="cartButton">
+                    🛒 Cart <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <span class="hero-badge">OEM & Performance parts</span>
+                    <h1>Keep your car running at its best.</h1>
+                    <p>Premium auto parts, expert advice, and fast delivery. Over 50,000 components for every make and model — from daily drivers to track builds.</p>
+                    <div class="hero-buttons">
+                        <a href="#" class="btn">Shop by category</a>
+                        <a href="#" class="btn btn-outline">Find my part</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <h4>12k+</h4>
+                            <p>Parts in stock</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>4.9★</h4>
+                            <p>Customer rating</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>24h</h4>
+                            <p>Dispatch</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image" aria-label="Auto parts illustration"></div>
+            </div>
+        </section>
+
+        <!-- CATEGORIES -->
+        <section class="categories">
+            <div class="container">
+                <h2 class="section-title">Shop by category</h2>
+                <p class="section-sub">Everything you need to maintain, repair, or upgrade your vehicle.</p>
+                <div class="cat-grid">
+                    <div class="cat-card">
+                        <span class="cat-emoji">🛞</span>
+                        <h3>Brakes</h3>
+                        <p>Pads, rotors, calipers</p>
+                    </div>
+                    <div class="cat-card">
+                        <span class="cat-emoji">🔧</span>
+                        <h3>Engine</h3>
+                        <p>Filters, belts, pumps</p>
+                    </div>
+                    <div class="cat-card">
+                        <span class="cat-emoji">🔋</span>
+                        <h3>Electrical</h3>
+                        <p>Batteries, alternators</p>
+                    </div>
+                    <div class="cat-card">
+                        <span class="cat-emoji">🪫</span>
+                        <h3>Suspension</h3>
+                        <p>Shocks, struts, arms</p>
+                    </div>
+                    <div class="cat-card">
+                        <span class="cat-emoji">🧴</span>
+                        <h3>Oils & Fluids</h3>
+                        <p>Engine oil, coolant</p>
+                    </div>
+                    <div class="cat-card">
+                        <span class="cat-emoji">💡</span>
+                        <h3>Lighting</h3>
+                        <p>LED, halogen, HID</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED PRODUCTS -->
+        <section class="products">
+            <div class="container">
+                <h2 class="section-title">Best sellers this week</h2>
+                <p class="section-sub">Top-rated parts trusted by mechanics and enthusiasts.</p>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <span class="product-badge">Free shipping</span>
+                        <div class="product-name">Brembo Ceramic Pads</div>
+                        <div class="product-desc">Front axle set, low dust, quiet stopping power for European models.</div>
+                        <div class="product-price">$89.99 <span>+ tax</span></div>
+                        <button class="add-to-cart" data-name="Brembo Ceramic Pads">Add to cart</button>
+                    </div>
+                    <div class="product-card">
+                        <span class="product-badge">Top rated</span>
+                        <div class="product-name">K&N Air Filter</div>
+                        <div class="product-desc">Washable, reusable, increases airflow. Fits most sedans & SUVs.</div>
+                        <div class="product-price">$54.90 <span>+ tax</span></div>
+                        <button class="add-to-cart" data-name="K&N Air Filter">Add to cart</button>
+                    </div>
+                    <div class="product-card">
+                        <span class="product-badge">New arrival</span>
+                        <div class="product-name">Bosch Alternator</div>
+                        <div class="product-desc">150A output, remanufactured to OEM spec, 2-year warranty.</div>
+                        <div class="product-price">$219.00 <span>+ tax</span></div>
+                        <button class="add-to-cart" data-name="Bosch Alternator">Add to cart</button>
+                    </div>
+                    <div class="product-card">
+                        <span class="product-badge">Limited stock</span>
+                        <div class="product-name">KYB Shock Absorber</div>
+                        <div class="product-desc">Gas-a-just monotube, perfect for improved handling & control.</div>
+                        <div class="product-price">$118.50 <span>+ tax</span></div>
+                        <button class="add-to-cart" data-name="KYB Shock Absorber">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY TORQUECRAFT -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Why drivers choose TorqueCraft</h2>
+                <p class="section-sub">We’re not just a parts store — we’re your garage partner.</p>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">🔍</span>
+                        <h4>Exact fit guarantee</h4>
+                        <p>Enter your VIN or plate — we’ll only show parts that fit your car perfectly.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🚚</span>
+                        <h4>Same-day dispatch</h4>
+                        <p>Order before 3 PM and we ship the same day. Free delivery over $99.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🛡️</span>
+                        <h4>2-year warranty</h4>
+                        <p>Every part is covered. No-hassle returns within 60 days.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🧑‍🔧</span>
+                        <h4>Expert support</h4>
+                        <p>Real mechanics on the line, 7 days a week. Get advice before you buy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIAL -->
+        <section class="testimonial">
+            <div class="container">
+                <div class="testimonial-quote">“I’ve been ordering from TorqueCraft for three years. The fitment guide is spot-on, and the parts arrive faster than any local store can order them.”</div>
+                <div class="testimonial-author"><span>Mark Reynolds</span> — Owner, Reynolds Auto Repair</div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <div class="container cta-box">
+                <div class="cta-text">
+                    <h2>Not sure which part you need?</h2>
+                    <p>Send us your VIN or a photo — our team will identify the right component and send you a quote within 30 minutes.</p>
+                </div>
+                <a href="#" class="btn" style="white-space: nowrap;">Get a quote →</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h5>TorqueCraft</h5>
+                    <ul>
+                        <li><a href="#">About us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Shop</h5>
+                    <ul>
+                        <li><a href="#">All parts</a></li>
+                        <li><a href="#">Brands</a></li>
+                        <li><a href="#">Clearance</a></li>
+                        <li><a href="#">Gift cards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="#">Order status</a></li>
+                        <li><a href="#">Shipping</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Warranty</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h5>Contact</h5>
+                    <p>📞 (800) 555-0199</p>
+                    <p>✉️ orders@torquecraft.com</p>
+                    <p>📍 2451 Industrial Way, Austin, TX 78744</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 TorqueCraft Auto Parts LLC. All rights reserved.</span>
+                <span>
+                    <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Cookies</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // cart counter
+            let cartCount = 0;
+            const cartCountSpan = document.getElementById('cartCount');
+            const cartButton = document.getElementById('cartButton');
+            const addButtons = document.querySelectorAll('.add-to-cart');
+
+            function updateCartDisplay() {
+                cartCountSpan.textContent = cartCount;
+            }
+
+            addButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    cartCount += 1;
+                    updateCartDisplay();
+
+                    // subtle feedback
+                    const originalText = btn.textContent;
+                    btn.textContent = '✓ Added';
+                    btn.style.background = '#0B1C2F';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#0B1C2F';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = 'transparent';
+                        btn.style.color = 'var(--accent)';
+                        btn.style.borderColor = 'var(--accent)';
+                    }, 600);
+                });
+            });
+
+            // cart button click — just a friendly alert for demo
+            cartButton.addEventListener('click', function() {
+                alert(`🛒 Your cart contains ${cartCount} item${cartCount !== 1 ? 's' : ''}. (Demo only)`);
+            });
+
+            // smooth scroll for "Shop by category" (example)
+            document.querySelectorAll('a[href="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') === '#') {
+                        e.preventDefault();
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

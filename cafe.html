@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember & Oak — Coffee Roasters</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23c17b4b'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>☕</text></svg>">
+    <style>
+        /* -------------------- RESET & VARIABLES -------------------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #1e1b1a;
+            --bg-light: #f8f4f0;
+            --text-dark: #2c2422;
+            --text-light: #f2ece7;
+            --accent: #c17b4b;
+            --accent-hover: #a86538;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 30px -10px rgba(0, 0, 0, 0.1);
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --max-width: 1200px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* -------------------- TYPOGRAPHY -------------------- */
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #6b5a4e;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+        }
+
+        /* -------------------- BUTTONS -------------------- */
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(193, 123, 75, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -8px rgba(193, 123, 75, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-dark);
+            border: 1.5px solid #d9cdc2;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(193, 123, 75, 0.06);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
+        /* -------------------- HEADER -------------------- */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(248, 244, 240, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            padding: 16px 0;
+            transition: box-shadow 0.2s;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.03em;
+            color: var(--text-dark);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+            color: #3d322c;
+        }
+
+        .nav-links a {
+            transition: color 0.2s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.25s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            line-height: 1;
+            padding: 8px 0;
+        }
+
+        /* -------------------- HERO -------------------- */
+        .hero {
+            padding: 80px 0 100px;
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 450px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(193, 123, 75, 0.12);
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 40px;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            max-width: 700px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #4e413a;
+            max-width: 550px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            flex: 1 1 400px;
+            background: #ddd1c6;
+            border-radius: 32px;
+            min-height: 400px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" width="600" height="500"><rect width="600" height="500" fill="%23e3d8cf"/><circle cx="300" cy="220" r="100" fill="%23b58b6e" opacity="0.5"/><circle cx="300" cy="240" r="70" fill="%23c17b4b" opacity="0.7"/><path d="M220 300 Q300 400 380 300" stroke="%233d2c22" stroke-width="18" fill="none" stroke-linecap="round"/><circle cx="380" cy="180" r="16" fill="%233d2c22"/><circle cx="220" cy="180" r="16" fill="%233d2c22"/><ellipse cx="300" cy="370" rx="100" ry="30" fill="%23a5866d" opacity="0.4"/></svg>');
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* -------------------- SECTION STYLES -------------------- */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        /* -------------------- FEATURES / VALUES -------------------- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 36px 28px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: #5b4d43;
+            font-size: 1rem;
+        }
+
+        /* -------------------- MENU / PRODUCTS -------------------- */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 28px 24px 32px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.25s;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        .menu-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: scale(1.01);
+        }
+
+        .menu-item .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 12px 0 6px;
+        }
+
+        .menu-item h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .menu-item p {
+            color: #665b53;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .menu-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent);
+            background: rgba(193, 123, 75, 0.1);
+            padding: 4px 12px;
+            border-radius: 30px;
+            align-self: flex-start;
+            margin-bottom: 12px;
+        }
+
+        /* -------------------- TESTIMONIALS -------------------- */
+        .testimonials {
+            background: #f0eae4;
+            border-radius: 48px;
+            padding: 60px 48px;
+            margin: 20px 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 32px 28px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            color: #3d322c;
+            font-size: 1.05rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #d9cdc2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #5b4d43;
+            font-size: 1.2rem;
+        }
+
+        .author-info strong {
+            display: block;
+            font-size: 1rem;
+        }
+
+        .author-info span {
+            font-size: 0.85rem;
+            color: #7f7066;
+        }
+
+        /* -------------------- CONTACT / VISIT -------------------- */
+        .contact-wrap {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 56px 48px;
+            box-shadow: var(--shadow-sm);
+            margin: 40px 0;
+        }
+
+        .contact-info {
+            flex: 1 1 280px;
+        }
+
+        .contact-info h2 {
+            margin-bottom: 1rem;
+        }
+
+        .contact-details {
+            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            font-size: 1.05rem;
+            color: #4e413a;
+        }
+
+        .contact-item span:first-child {
+            font-size: 1.4rem;
+            line-height: 1.2;
+        }
+
+        .hours {
+            margin-top: 2rem;
+            background: #f8f4f0;
+            padding: 20px 24px;
+            border-radius: 20px;
+        }
+
+        .hours p {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            color: #4e413a;
+        }
+
+        .hours strong {
+            font-weight: 600;
+        }
+
+        .contact-map {
+            flex: 1 1 350px;
+            background: #e3d8cf;
+            border-radius: 28px;
+            min-height: 300px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400"><rect width="500" height="400" fill="%23d9cdc2"/><path d="M0 200 L500 200 M250 0 L250 400" stroke="%23b8a99b" stroke-width="4"/><circle cx="250" cy="200" r="40" fill="%23c17b4b" opacity="0.8"/><circle cx="250" cy="200" r="18" fill="white"/><text x="270" y="195" font-family="Arial" font-size="16" fill="%233d2c22" font-weight="bold">Ember &amp; Oak</text><rect x="80" y="80" width="100" height="60" rx="8" fill="%23b8a99b" opacity="0.4"/><rect x="340" y="260" width="120" height="70" rx="8" fill="%23b8a99b" opacity="0.4"/><rect x="60" y="280" width="90" height="80" rx="8" fill="%23b8a99b" opacity="0.3"/><rect x="350" y="70" width="80" height="50" rx="8" fill="%23b8a99b" opacity="0.3"/></svg>');
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+        }
+
+        /* -------------------- FOOTER -------------------- */
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 56px 0 32px;
+            margin-top: 60px;
+            border-radius: 40px 40px 0 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 span {
+            color: var(--accent);
+        }
+
+        .footer-brand p {
+            color: #b8aaa0;
+            max-width: 280px;
+            font-size: 0.95rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            color: white;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #b8aaa0;
+            margin-bottom: 0.7rem;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 0.9rem;
+            color: #9a8b80;
+        }
+
+        .socials {
+            display: flex;
+            gap: 20px;
+        }
+
+        .socials a {
+            color: #9a8b80;
+            transition: color 0.2s;
+            font-size: 1.2rem;
+        }
+
+        .socials a:hover {
+            color: var(--accent);
+        }
+
+        /* -------------------- RESPONSIVE -------------------- */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 0;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 24px;
+                right: 24px;
+                background: white;
+                padding: 24px;
+                border-radius: 24px;
+                box-shadow: var(--shadow-md);
+                gap: 1.5rem;
+                text-align: center;
+                font-size: 1.1rem;
+                border: 1px solid #eee7e0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 60px 0 70px;
+                gap: 40px;
+            }
+
+            .hero-image {
+                min-height: 300px;
+            }
+
+            .hero p {
+                font-size: 1.05rem;
+            }
+
+            .btn {
+                padding: 0.8rem 1.8rem;
+                font-size: 0.95rem;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .testimonials {
+                padding: 40px 24px;
+                border-radius: 32px;
+            }
+
+            .contact-wrap {
+                padding: 36px 24px;
+                gap: 36px;
+            }
+
+            .footer {
+                padding: 40px 0 28px;
+                border-radius: 32px 32px 0 0;
+            }
+
+            .footer-grid {
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .feature-card {
+                padding: 28px 20px;
+            }
+
+            .menu-item {
+                padding: 24px 18px 28px;
+            }
+        }
+
+        /* small animation for hero image */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero-image {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 20px rgba(193, 123, 75, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 99;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent-hover);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container nav">
+            <div class="logo">Ember <span>&</span> Oak</div>
+            <nav class="nav-links" id="navLinks">
+                <a href="#story">Our Story</a>
+                <a href="#menu">Menu</a>
+                <a href="#testimonials">Reviews</a>
+                <a href="#visit">Visit</a>
+            </nav>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero container">
+            <div class="hero-content">
+                <div class="hero-badge">☕ Small-batch roastery</div>
+                <h1>Where every cup tells a story.</h1>
+                <p>Ember & Oak is a neighbourhood coffee shop and roastery in the heart of Portland. We source ethically, roast daily, and serve with intention.</p>
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn">Explore our menu</a>
+                    <a href="#visit" class="btn btn-outline">Find us</a>
+                </div>
+            </div>
+            <div class="hero-image" aria-label="Warm coffee shop atmosphere"></div>
+        </section>
+
+        <!-- FEATURES / VALUES -->
+        <section id="story" class="container">
+            <div class="section-header">
+                <h2>Crafted with care, served with warmth</h2>
+                <p class="section-subtitle">From the farm to your cup — we obsess over every detail so you can simply enjoy the moment.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🌱</span>
+                    <h3>Ethically sourced</h3>
+                    <p>We partner directly with smallholder farms across Ethiopia, Colombia, and Guatemala. Every bean is traceable to its origin.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔥</span>
+                    <h3>Roasted in-house</h3>
+                    <p>Our vintage Probat roaster runs daily. Small batches mean fresher coffee and a profile tailored to each origin.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Community first</h3>
+                    <p>More than a café — we host weekly cupping sessions, latte art throwdowns, and local artist showcases.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU / PRODUCTS -->
+        <section id="menu" class="container">
+            <div class="section-header">
+                <h2>What's brewing today</h2>
+                <p class="section-subtitle">A rotating selection of espresso classics and seasonal specials. Ask our baristas for the current single origin.</p>
+            </div>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <span class="menu-tag">Espresso</span>
+                    <h4>Ember Espresso</h4>
+                    <p>Our signature blend — notes of dark chocolate, hazelnut, and a hint of dried cherry. Syrupy body, lingering finish.</p>
+                    <div class="price">$3.50</div>
+                </div>
+                <div class="menu-item">
+                    <span class="menu-tag">Filter</span>
+                    <h4>Ethiopia Guji</h4>
+                    <p>Washed heirloom varietal. Bright and floral with bergamot, jasmine, and a juicy peach acidity. Brewed as V60 or batch.</p>
+                    <div class="price">$4.25</div>
+                </div>
+                <div class="menu-item">
+                    <span class="menu-tag">Signature</span>
+                    <h4>Oak Latte</h4>
+                    <p>Double shot, oat milk, house-made vanilla bean syrup, and a dusting of cinnamon. Comfort in a cup.</p>
+                    <div class="price">$5.40</div>
+                </div>
+                <div class="menu-item">
+                    <span class="menu-tag">Cold</span>
+                    <h4>Nitro Cold Brew</h4>
+                    <p>Steeped for 18 hours, infused with nitrogen for a creamy, stout-like texture. Served black over ice.</p>
+                    <div class="price">$5.00</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section id="testimonials" class="container">
+            <div class="testimonials">
+                <h2>Kind words from regulars</h2>
+                <p style="color: #5b4d43; max-width: 500px;">We're grateful to be part of your daily ritual.</p>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <p>"The Oak Latte is my morning non-negotiable. The team remembers my order and always has a smile. Best coffee in Portland, hands down."</p>
+                        <div class="testimonial-author">
+                            <div class="avatar">MC</div>
+                            <div class="author-info">
+                                <strong>Maya Chen</strong>
+                                <span>Regular since 2021</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"I've been to specialty cafés all over the world, and Ember & Oak's single origin program is world-class. Their Guji is exceptional."</p>
+                        <div class="testimonial-author">
+                            <div class="avatar">JR</div>
+                            <div class="author-info">
+                                <strong>James Rivera</strong>
+                                <span>Coffee enthusiast</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p>"The perfect neighbourhood spot. Great Wi-Fi, warm atmosphere, and the pastries are baked fresh every morning. I basically live here."</p>
+                        <div class="testimonial-author">
+                            <div class="avatar">SL</div>
+                            <div class="author-info">
+                                <strong>Sophie Laurent</strong>
+                                <span>Freelance designer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT / VISIT -->
+        <section id="visit" class="container">
+            <div class="contact-wrap">
+                <div class="contact-info">
+                    <h2>Come say hello</h2>
+                    <p style="color: #5b4d43;">We're tucked away on a quiet street in the Pearl District. Look for the copper awning and the smell of fresh roast.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <span>📍</span>
+                            <span>1847 NW Marshall Street<br>Portland, OR 97209</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>📞</span>
+                            <span>(503) 555-0192</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>✉️</span>
+                            <span>hello@emberandoak.coffee</span>
+                        </div>
+                    </div>
+                    <div class="hours">
+                        <p><strong>Mon – Fri</strong> <span>7:00 AM – 6:00 PM</span></p>
+                        <p><strong>Saturday</strong> <span>8:00 AM – 6:00 PM</span></p>
+                        <p><strong>Sunday</strong> <span>8:00 AM – 4:00 PM</span></p>
+                    </div>
+                </div>
+                <div class="contact-map" aria-label="Map location of Ember & Oak"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>Ember <span>&</span> Oak</h3>
+                    <p>Small-batch coffee roasters and café. Making Portland mornings a little brighter since 2018.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Explore</h4>
+                    <a href="#story">Our Story</a>
+                    <a href="#menu">Menu</a>
+                    <a href="#testimonials">Reviews</a>
+                    <a href="#visit">Visit Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Newsletter</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Visit</h4>
+                    <a href="#">1847 NW Marshall St</a>
+                    <a href="#">Portland, OR 97209</a>
+                    <a href="#">(503) 555-0192</a>
+                    <a href="#">hello@emberandoak.coffee</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 Ember & Oak Coffee Roasters. All rights reserved.</span>
+                <div class="socials">
+                    <a href="#" aria-label="Instagram">📷</a>
+                    <a href="#" aria-label="Facebook">👍</a>
+                    <a href="#" aria-label="Twitter">🐦</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <script>
+        (function() {
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navLinks.classList.toggle('active');
+                menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+            });
+
+            // Close mobile menu when clicking a link
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    menuToggle.textContent = '☰';
+                }
+            });
+
+            // Header shadow on scroll
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 20) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 400) {
+                    backToTop.classList.add('visible');
+                } else {
+                    backToTop.classList.remove('visible');
+                }
+            });
+
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Smooth scroll for anchor links (fallback for older browsers)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Little easter egg: log a friendly message
+            console.log('☕ Ember & Oak — thanks for stopping by. Say hi when you visit!');
+        })();
+    </script>
+</body>
+</html>

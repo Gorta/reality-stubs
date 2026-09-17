@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertex Forge Industries — Precision Metal Manufacturing</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23d94f2b'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>V</text></svg>">
+<style>
+:root{
+  --primary:#d94f2b;
+  --primary-dark:#b03a1c;
+  --primary-light:#ff7a52;
+  --ink:#1a1c22;
+  --ink-soft:#3d4148;
+  --muted:#6f7681;
+  --line:#e4e2dd;
+  --bg:#faf8f5;
+  --bg-alt:#f2efe9;
+  --card:#ffffff;
+  --steel:#2b3038;
+  --steel-light:#4a5159;
+  --radius:14px;
+  --radius-lg:24px;
+  --radius-sm:8px;
+  --shadow-sm:0 2px 8px rgba(26,28,34,.06);
+  --shadow:0 8px 28px rgba(26,28,34,.09);
+  --shadow-lg:0 20px 50px rgba(26,28,34,.14);
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+  --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+ul{list-style:none}
+
+.wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* ===== Header ===== */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,248,245,.86);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  transition:box-shadow .3s;
+}
+.site-header.scrolled{box-shadow:var(--shadow-sm)}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:68px;
+}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.02em;font-size:1.08rem}
+.brand-mark{
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  display:grid;place-items:center;
+  color:#fff;font-weight:900;font-size:1.05rem;
+  box-shadow:0 4px 12px rgba(217,79,43,.32);
+  flex-shrink:0;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.1}
+.brand-text small{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+.nav-desktop{display:none;align-items:center;gap:34px}
+.nav-desktop a{
+  font-size:.9rem;font-weight:600;color:var(--ink-soft);
+  position:relative;transition:color .2s;
+}
+.nav-desktop a::after{
+  content:'';position:absolute;left:0;bottom:-5px;width:0;height:2px;
+  background:var(--primary);transition:width .25s;border-radius:2px;
+}
+.nav-desktop a:hover{color:var(--primary)}
+.nav-desktop a:hover::after{width:100%}
+
+.header-actions{display:flex;align-items:center;gap:12px}
+.cart-btn{
+  position:relative;width:42px;height:42px;border-radius:12px;
+  background:var(--bg-alt);display:grid;place-items:center;
+  font-size:1.15rem;transition:background .2s,transform .15s;
+}
+.cart-btn:hover{background:#e8e4dc}
+.cart-btn:active{transform:scale(.94)}
+.cart-count{
+  position:absolute;top:-5px;right:-5px;
+  min-width:20px;height:20px;padding:0 5px;
+  background:var(--primary);color:#fff;
+  font-size:.68rem;font-weight:800;
+  border-radius:10px;display:grid;place-items:center;
+  border:2px solid var(--bg);
+  transition:transform .2s;
+}
+.cart-count.bump{transform:scale(1.35)}
+
+.cta-header{
+  display:none;
+  background:var(--ink);color:#fff;
+  padding:10px 20px;border-radius:11px;
+  font-size:.85rem;font-weight:700;
+  transition:background .2s,transform .15s;
+}
+.cta-header:hover{background:var(--primary);transform:translateY(-1px)}
+
+.burger{
+  width:42px;height:42px;border-radius:12px;
+  background:var(--bg-alt);display:grid;place-items:center;
+  gap:5px;padding:12px 11px;
+}
+.burger span{
+  display:block;width:100%;height:2px;background:var(--ink);
+  border-radius:2px;transition:transform .3s,opacity .25s;
+}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.nav-mobile{
+  position:fixed;inset:68px 0 auto 0;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  padding:16px 20px 26px;
+  display:flex;flex-direction:column;gap:4px;
+  transform:translateY(-130%);
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  z-index:99;
+  box-shadow:var(--shadow);
+}
+.nav-mobile.open{transform:translateY(0)}
+.nav-mobile a{
+  padding:14px 8px;font-weight:600;font-size:1.02rem;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-mobile a:last-of-type{border-bottom:none}
+.nav-mobile a::after{content:'→';color:var(--primary);opacity:.6}
+.nav-mobile .cta-header{display:block;text-align:center;margin-top:14px;background:var(--primary)}
+
+/* ===== Hero ===== */
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 85% 10%,rgba(217,79,43,.11),transparent 65%),
+    radial-gradient(ellipse 60% 55% at 8% 85%,rgba(43,48,56,.09),transparent 60%),
+    var(--bg);
+  padding:64px 0 72px;
+}
+.hero-grid{display:grid;gap:44px;align-items:center}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);
+  padding:7px 15px;border-radius:100px;
+  font-size:.76rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-soft);
+  box-shadow:var(--shadow-sm);margin-bottom:22px;
+}
+.hero-badge .dot{
+  width:8px;height:8px;border-radius:50%;background:#2eb872;
+  box-shadow:0 0 0 3px rgba(46,184,114,.18);
+  animation:pulse 2.2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.hero h1{
+  font-size:clamp(2.1rem,6.2vw,3.55rem);
+  line-height:1.08;font-weight:800;letter-spacing:-.03em;
+  margin-bottom:20px;
+}
+.hero h1 .accent{
+  color:var(--primary);
+  background:linear-gradient(180deg,transparent 62%,rgba(217,79,43,.18) 62%);
+  padding:0 3px;
+}
+.hero p.lead{
+  font-size:1.05rem;color:var(--ink-soft);
+  max-width:540px;margin-bottom:30px;
+}
+.hero-actions{display:flex;flex-wrap:wrap;gap:13px;margin-bottom:38px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:14px 27px;border-radius:var(--radius);
+  font-weight:700;font-size:.94rem;
+  transition:transform .16s,box-shadow .2s,background .2s;
+  white-space:nowrap;
+}
+.btn-primary{
+  background:var(--primary);color:#fff;
+  box-shadow:0 8px 22px rgba(217,79,43,.32);
+}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 12px 28px rgba(217,79,43,.4)}
+.btn-ghost{
+  background:var(--card);color:var(--ink);
+  border:1px solid var(--line);box-shadow:var(--shadow-sm);
+}
+.btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+
+.hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  border-top:1px solid var(--line);padding-top:26px;max-width:520px;
+}
+.hero-stat strong{
+  display:block;font-size:clamp(1.35rem,4vw,1.8rem);
+  font-weight:800;letter-spacing:-.02em;color:var(--ink);
+}
+.hero-stat span{font-size:.76rem;color:var(--muted);font-weight:600;line-height:1.35;display:block}
+
+.hero-visual{position:relative}
+.hero-card{
+  background:var(--steel);border-radius:var(--radius-lg);
+  padding:22px;box-shadow:var(--shadow-lg);
+  position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.06);
+}
+.hero-card::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,79,43,.5),transparent 70%);
+}
+.hero-card-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;position:relative;
+}
+.hero-card-head span{color:#9aa1ab;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.hero-card-head i{
+  width:9px;height:9px;border-radius:50%;background:#2eb872;
+  box-shadow:0 0 0 4px rgba(46,184,114,.15);display:block;
+}
+.parts-list{display:flex;flex-direction:column;gap:9px;position:relative}
+.part{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.07);
+  padding:12px 14px;border-radius:var(--radius-sm);
+  transition:background .25s,transform .2s;
+}
+.part:hover{background:rgba(255,255,255,.1);transform:translateX(3px)}
+.part-icon{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  display:grid;place-items:center;font-size:1rem;flex-shrink:0;
+}
+.part-info{flex:1;min-width:0}
+.part-info b{display:block;color:#fff;font-size:.84rem;font-weight:700}
+.part-info small{color:#8a919b;font-size:.7rem;font-family:var(--mono)}
+.part-qty{
+  color:var(--primary-light);font-size:.74rem;font-weight:800;
+  font-family:var(--mono);white-space:nowrap;
+}
+.hero-card-foot{
+  margin-top:16px;padding-top:15px;
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;justify-content:space-between;align-items:center;
+  position:relative;
+}
+.hero-card-foot small{color:#8a919b;font-size:.72rem}
+.hero-card-foot b{color:#fff;font-size:.92rem;font-family:var(--mono)}
+
+/* ===== Sections ===== */
+section{padding:72px 0}
+.section-head{max-width:660px;margin-bottom:44px}
+.section-label{
+  display:inline-block;font-size:.74rem;font-weight:800;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--primary);margin-bottom:12px;
+}
+.section-head h2{
+  font-size:clamp(1.65rem,4.6vw,2.45rem);
+  line-height:1.16;font-weight:800;letter-spacing:-.025em;
+  margin-bottom:14px;
+}
+.section-head p{color:var(--muted);font-size:1rem}
+
+/* Features */
+.features{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.features-grid{display:grid;gap:18px}
+.feature{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:28px 26px;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  position:relative;overflow:hidden;
+}
+.feature::after{
+  content:'';position:absolute;top:0;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,var(--primary),var(--primary-light));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s;
+}
+.feature:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:transparent}
+.feature:hover::after{transform:scaleX(1)}
+.feature-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:var(--bg-alt);display:grid;place-items:center;
+  font-size:1.5rem;margin-bottom:19px;
+  border:1px solid var(--line);
+}
+.feature h3{font-size:1.12rem;font-weight:800;margin-bottom:9px;letter-spacing:-.01em}
+.feature p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
+.feature ul{display:flex;flex-direction:column;gap:7px}
+.feature li{
+  font-size:.83rem;color:var(--ink-soft);font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+.feature li::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--primary);flex-shrink:0;
+}
+
+/* Process tabs */
+.tabs-nav{
+  display:flex;gap:8px;overflow-x:auto;
+  padding-bottom:4px;margin-bottom:26px;
+  scrollbar-width:none;
+}
+.tabs-nav::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:11px 20px;border-radius:100px;
+  background:var(--card);border:1px solid var(--line);
+  font-size:.86rem;font-weight:700;color:var(--ink-soft);
+  white-space:nowrap;transition:all .22s;
+}
+.tab-btn:hover{border-color:var(--primary);color:var(--primary)}
+.tab-btn.active{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+  box-shadow:0 6px 18px rgba(26,28,34,.22);
+}
+.tab-panel{display:none;animation:fadeUp .4s ease}
+.tab-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.panel-inner{
+  display:grid;gap:26px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:30px;
+  box-shadow:var(--shadow-sm);
+}
+.panel-inner h3{font-size:1.3rem;font-weight:800;margin-bottom:12px;letter-spacing:-.015em}
+.panel-inner p{color:var(--muted);font-size:.94rem;margin-bottom:18px}
+.panel-meta{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  background:var(--bg-alt);border:1px solid var(--line);
+  padding:7px 14px;border-radius:100px;
+  font-size:.76rem;font-weight:700;color:var(--ink-soft);
+}
+.chip b{color:var(--primary)}
+.panel-visual{
+  background:linear-gradient(140deg,var(--steel),var(--steel-light));
+  border-radius:var(--radius);min-height:180px;
+  display:grid;place-items:center;position:relative;overflow:hidden;
+  font-size:3.6rem;
+}
+.panel-visual::after{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(255,255,255,.025) 12px,rgba(255,255,255,.025) 24px);
+}
+
+/* Numbers */
+.numbers{
+  background:var(--steel);color:#fff;
+  border-radius:var(--radius-lg);
+  padding:46px 30px;margin:0 20px;
+  position:relative;overflow:hidden;
+}
+.numbers::before{
+  content:'';position:absolute;top:-100px;right:-80px;
+  width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,79,43,.35),transparent 68%);
+}
+.numbers-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:30px 20px;position:relative;
+}
+.num-item{text-align:left}
+.num-item strong{
+  display:block;font-size:clamp(1.8rem,6vw,2.7rem);
+  font-weight:800;letter-spacing:-.03em;line-height:1;
+  color:var(--primary-light);margin-bottom:8px;
+}
+.num-item span{font-size:.82rem;color:#a8aeb7;font-weight:600;line-height:1.4;display:block}
+
+/* Testimonials */
+.testi-grid{display:grid;gap:18px}
+.testi{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:28px 26px;
+  display:flex;flex-direction:column;
+  transition:transform .25s,box-shadow .25s;
+}
+.testi:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.stars{color:#f0a500;font-size:.92rem;letter-spacing:2px;margin-bottom:14px}
+.testi blockquote{
+  font-size:.95rem;color:var(--ink-soft);line-height:1.7;
+  margin-bottom:22px;flex:1;
+}
+.testi-author{display:flex;align-items:center;gap:13px}
+.avatar{
+  width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;font-weight:800;color:#fff;
+  font-size:.95rem;flex-shrink:0;
+}
+.av-1{background:linear-gradient(135deg,#d94f2b,#a8381c)}
+.av-2{background:linear-gradient(135deg,#2b3038,#4a5159)}
+.av-3{background:linear-gradient(135deg,#3b7a8f,#2a5a6b)}
+.testi-author b{display:block;font-size:.88rem;font-weight:800}
+.testi-author small{font-size:.75rem;color:var(--muted);display:block}
+
+/* CTA */
+.cta-band{
+  background:
+    radial-gradient(ellipse 70% 100% at 90% 50%,rgba(217,79,43,.18),transparent 65%),
+    linear-gradient(135deg,#20242b,#2f3540);
+  border-radius:var(--radius-lg);
+  margin:0 20px;padding:52px 30px;
+  color:#fff;position:relative;overflow:hidden;
+}
+.cta-band::after{
+  content:'';position:absolute;left:-50px;bottom:-80px;
+  width:260px;height:260px;border-radius:50%;
+  border:38px solid rgba(255,255,255,.035);
+}
+.cta-inner{position:relative;max-width:600px}
+.cta-band h2{
+  font-size:clamp(1.6rem,4.8vw,2.3rem);
+  font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:14px;
+}
+.cta-band p{color:#b8bec7;margin-bottom:28px;font-size:.97rem}
+.cta-form{display:flex;flex-direction:column;gap:11px;max-width:470px}
+.cta-input-row{display:flex;flex-direction:column;gap:11px}
+.cta-input-row input{
+  flex:1;padding:14px 18px;border-radius:var(--radius);
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.07);
+  color:#fff;font-size:.92rem;font-family:inherit;
+  transition:border-color .2s,background .2s;
+  min-width:0;
+}
+.cta-input-row input::placeholder{color:#8b929c}
+.cta-input-row input:focus{
+  outline:none;border-color:var(--primary);
+  background:rgba(255,255,255,.11);
+}
+.cta-input-row input.invalid{border-color:#ff5c5c;background:rgba(255,92,92,.1)}
+.cta-input-row button{
+  padding:14px 26px;border-radius:var(--radius);
+  background:var(--primary);color:#fff;font-weight:700;font-size:.92rem;
+  transition:background .2s,transform .15s;
+  box-shadow:0 8px 22px rgba(217,79,43,.35);
+}
+.cta-input-row button:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.form-msg{font-size:.8rem;font-weight:600;min-height:18px}
+.form-msg.error{color:#ff8080}
+.form-msg.success{color:#5fd99a}
+.cta-note{font-size:.76rem;color:#8b929c;margin-top:4px}
+
+/* Footer */
+.site-footer{
+  background:var(--ink);color:#a8aeb7;
+  padding:56px 0 26px;margin-top:72px;
+}
+.footer-grid{display:grid;gap:36px;margin-bottom:42px}
+.footer-brand .brand{color:#fff;margin-bottom:16px}
+.footer-brand .brand-text small{color:#7d848e}
+.footer-brand p{font-size:.88rem;max-width:300px;margin-bottom:20px;line-height:1.7}
+.footer-social{display:flex;gap:10px}
+.footer-social a{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(255,255,255,.07);
+  display:grid;place-items:center;font-size:1rem;
+  transition:background .2s,transform .18s;
+}
+.footer-social a:hover{background:var(--primary);transform:translateY(-3px)}
+.footer-col h4{
+  color:#fff;font-size:.78rem;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;
+}
+.footer-col ul{display:flex;flex-direction:column;gap:11px}
+.footer-col a,.footer-col li{font-size:.87rem;transition:color .2s}
+.footer-col a:hover{color:var(--primary-light)}
+.footer-contact li{display:flex;gap:11px;align-items:flex-start;line-height:1.55}
+.footer-contact li span:first-child{flex-shrink:0;opacity:.85}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.09);
+  padding-top:24px;display:flex;flex-direction:column;gap:12px;
+  font-size:.79rem;
+}
+.footer-bottom-links{display:flex;flex-wrap:wrap;gap:20px}
+.footer-bottom-links a:hover{color:var(--primary-light)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:22px;left:50%;
+  transform:translate(-50%,140%);
+  background:var(--ink);color:#fff;
+  padding:13px 24px;border-radius:100px;
+  font-size:.86rem;font-weight:700;
+  box-shadow:var(--shadow-lg);z-index:200;
+  transition:transform .4s cubic-bezier(.2,1.2,.4,1);
+  display:flex;align-items:center;gap:9px;
+  max-width:calc(100% - 32px);
+}
+.toast.show{transform:translate(-50%,0)}
+
+/* ===== Responsive ===== */
+@media(min-width:600px){
+  .cta-input-row{flex-direction:row}
+  .cta-input-row button{flex-shrink:0}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+  .numbers-grid{grid-template-columns:repeat(4,1fr)}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-bottom{flex-direction:row;justify-content:space-between;align-items:center}
+}
+@media(min-width:900px){
+  .wrap{padding:0 32px}
+  .nav-desktop{display:flex}
+  .cta-header{display:inline-flex}
+  .burger{display:none}
+  .nav-mobile{display:none}
+  .hero{padding:86px 0 100px}
+  .hero-grid{grid-template-columns:1.08fr .92fr;gap:56px}
+  .hero-stats{gap:16px}
+  section{padding:96px 0}
+  .features-grid{grid-template-columns:repeat(3,1fr)}
+  .panel-inner{grid-template-columns:1.15fr .85fr;align-items:center;padding:38px}
+  .panel-visual{min-height:230px;font-size:4.6rem}
+  .testi-grid{grid-template-columns:repeat(3,1fr)}
+  .numbers{padding:60px 54px;margin:0 32px}
+  .cta-band{padding:70px 60px;margin:0 32px}
+  .footer-grid{grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:44px}
+  .site-footer{padding:72px 0 30px}
+}
+@media(min-width:1180px){
+  .wrap{padding:0 0}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="header">
+  <div class="wrap header-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark">V</span>
+      <span class="brand-text">
+        Vertex Forge
+        <small>Industries</small>
+      </span>
+    </a>
+
+    <nav class="nav-desktop">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#process">Process</a>
+      <a href="#numbers">Scale</a>
+      <a href="#clients">Clients</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Request quote basket">
+        <span aria-hidden="true">🧾</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <a href="#quote" class="cta-header">Request a Quote</a>
+      <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-mobile" id="navMobile">
+    <a href="#capabilities">Capabilities</a>
+    <a href="#process">Process</a>
+    <a href="#numbers">Scale</a>
+    <a href="#clients">Clients</a>
+    <a href="#quote" class="cta-header">Request a Quote</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          ISO 9001:2015 &middot; AS9100D Certified
+        </div>
+        <h1>Precision metal parts, <span class="accent">forged</span> to your exact spec.</h1>
+        <p class="lead">
+          Vertex Forge Industries runs CNC machining, sheet fabrication and heat treatment
+          under one roof in Rockford, Illinois. From a single prototype to 50,000-unit runs —
+          tolerances down to ±0.005 mm, quoted within one business day.
+        </p>
+        <div class="hero-actions">
+          <a href="#quote" class="btn btn-primary">Start Your Project <span aria-hidden="true">→</span></a>
+          <a href="#capabilities" class="btn btn-ghost">Explore Capabilities</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>±0.005</strong><span>mm achievable tolerance</span></div>
+          <div class="hero-stat"><strong>24 h</strong><span>average quote turnaround</span></div>
+          <div class="hero-stat"><strong>31 yr</strong><span>on the shop floor</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-head">
+            <span>Live Production Board</span>
+            <i></i>
+          </div>
+          <div class="parts-list">
+            <div class="part">
+              <div class="part-icon" aria-hidden="true">⚙️</div>
+              <div class="part-info">
+                <b>Turbine Bracket</b>
+                <small>AL-7075 · 5-axis</small>
+              </div>
+              <div class="part-qty">1,240 pcs</div>
+            </div>
+            <div class="part">
+              <div class="part-icon" aria-hidden="true">🔩</div>
+              <div class="part-info">
+                <b>Hydraulic Manifold</b>
+                <small>SS-316L · Turn/Mill</small>
+              </div>
+              <div class="part-qty">680 pcs</div>
+            </div>
+            <div class="part">
+              <div class="part-icon" aria-hidden="true">🛠️</div>
+              <div class="part-info">
+                <b>Chassis Rail Set</b>
+                <small>Ti-6Al-4V · Waterjet</small>
+              </div>
+              <div class="part-qty">325 pcs</div>
+            </div>
+          </div>
+          <div class="hero-card-foot">
+            <small>OEE this shift</small>
+            <b>92.4%</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section class="features" id="capabilities">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-label">Capabilities</span>
+        <h2>Three shops, one supply chain</h2>
+        <p>We keep machining, fabrication and finishing in-house so your parts never sit in a queue at a third-party vendor.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">⚙️</div>
+          <h3>CNC Machining</h3>
+          <p>12 vertical and 6 multi-axis turning centers running lights-out overnight.</p>
+          <ul>
+            <li>3, 4 &amp; 5-axis milling</li>
+            <li>Live-tool turning up to Ø320 mm</li>
+            <li>Aluminum, titanium, stainless, brass</li>
+          </ul>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🔥</div>
+          <h3>Sheet &amp; Plate Fabrication</h3>
+          <p>Fiber laser, waterjet and press brake cells for enclosures, brackets and frames.</p>
+          <ul>
+            <li>Laser cutting up to 25 mm mild steel</li>
+            <li>CNC bending to 4,000 mm</li>
+            <li>Robotic MIG / TIG welding</li>
+          </ul>
+        </article>
+
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🔬</div>
+          <h3>Finishing &amp; Inspection</h3>
+          <p>Anodizing, passivation and CMM verification before anything ships out the door.</p>
+          <ul>
+            <li>Type II &amp; III anodize lines</li>
+            <li>Zeiss CMM, first-article reports</li>
+            <li>Full material traceability</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS TABS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-label">How We Work</span>
+        <h2>From drawing to delivered parts</h2>
+        <p>A transparent four-step workflow. You always know which stage your order is in.</p>
+      </div>
+
+      <div class="tabs-nav" role="tablist" aria-label="Production process">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="t1">01 · Quote</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t2">02 · DFM Review</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t3">03 · Production</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="t4">04 · QA &amp; Shipping</button>
+      </div>
+
+      <div class="tab-panel active" id="t1" role="tabpanel">
+        <div class="panel-inner">
+          <div>
+            <h3>Send a drawing, get a firm price</h3>
+            <p>Upload STEP, IGES or a 2D PDF — our estimating team returns a costed quote with lead time and material options within one business day, no obligation.</p>
+            <div class="panel-meta">
+              <span class="chip">Lead time <b>24 h</b></span>
+              <span class="chip">Formats <b>STEP / IGES / PDF</b></span>
+              <span class="chip">NDA <b>on request</b></span>
+            </div>
+          </div>
+          <div class="panel-visual" aria-hidden="true">📐</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t2" role="tabpanel">
+        <div class="panel-inner">
+          <div>
+            <h3>Design-for-manufacturing review</h3>
+            <p>A manufacturing engineer flags thin walls, unreachable features and tolerance stack-ups that would raise your unit cost — before a single chip is cut.</p>
+            <div class="panel-meta">
+              <span class="chip">Engineer <b>assigned</b></span>
+              <span class="chip">Markup <b>redlines</b></span>
+              <span class="chip">Cost savings <b>avg. 14%</b></span>
+            </div>
+          </div>
+          <div class="panel-visual" aria-hidden="true">🧠</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t3" role="tabpanel">
+        <div class="panel-inner">
+          <div>
+            <h3>Production on dedicated cells</h3>
+            <p>Your order is scheduled on dedicated machines with a named cell lead. Status photos and daily output counts land in your inbox automatically.</p>
+            <div class="panel-meta">
+              <span class="chip">Machines <b>24/7</b></span>
+              <span class="chip">Cell lead <b>named</b></span>
+              <span class="chip">Updates <b>daily</b></span>
+            </div>
+          </div>
+          <div class="panel-visual" aria-hidden="true">🏭</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t4" role="tabpanel">
+        <div class="panel-inner">
+          <div>
+            <h3>Inspection, paperwork, delivery</h3>
+            <p>Every lot ships with a dimensional report, material certs and a Certificate of Conformance. Domestic freight or DDP to 14 countries.</p>
+            <div class="panel-meta">
+              <span class="chip">CMM <b>100% sampled</b></span>
+              <span class="chip">CoC <b>included</b></span>
+              <span class="chip">Export <b>14 countries</b></span>
+            </div>
+          </div>
+          <div class="panel-visual" aria-hidden="true">📦</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUMBERS -->
+  <section id="numbers" style="padding-top:0">
+    <div class="numbers">
+      <div class="numbers-grid">
+        <div class="num-item"><strong>1.2M+</strong><span>Parts shipped since 1993</span></div>
+        <div class="num-item"><strong>340</strong><span>Active industrial clients</span></div>
+        <div class="num-item"><strong>99.6%</strong><span>On-time delivery rate</span></div>
+        <div class="num-item"><strong>0.18%</strong><span>Field return rate</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="clients" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-label">Client Feedback</span>
+        <h2>Trusted by engineering teams</h2>
+        <p>Program managers, supply chain leads and design engineers on what it's like to work with Vertex Forge.</p>
+      </div>
+
+      <div class="testi-grid">
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>
+            "We moved a hydraulic manifold program to Vertex after two suppliers missed deadlines. Their DFM notes shaved 18% off unit cost and the first article passed CMM inspection on the first try."
+          </blockquote>
+          <div class="testi-author">
+            <div class="avatar av-1">MR</div>
+            <div>
+              <b>Marcus Reyes</b>
+              <small>Supply Chain Director, Axtell Hydraulics</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>
+            "Five-axis titanium brackets with ±0.008 mm true position — most shops quote six weeks. Vertex delivered in nineteen days and the paperwork was flawless. They're now our sole source."
+          </blockquote>
+          <div class="testi-author">
+            <div class="avatar av-2">PK</div>
+            <div>
+              <b>Priya Kanwal</b>
+              <small>Principal Engineer, Northline Aerospace</small>
+            </div>
+          </div>
+        </article>
+
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>
+            "Their live production board is a game changer. I can see output counts every morning without emailing anyone. Three years in, zero late shipments on our account."
+          </blockquote>
+          <div class="testi-author">
+            <div class="avatar av-3">TO</div>
+            <div>
+              <b>Tomás Okafor</b>
+              <small>Plant Manager, Meridian Robotics</small>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="quote" style="padding-top:0">
+    <div class="cta-band">
+      <div class="cta-inner">
+        <h2>Send us a drawing. Get a real number back.</h2>
+        <p>Drop your email and we'll send a quote request form plus a direct line to a manufacturing engineer — no sales funnel, no auto-dialer.</p>
+
+        <form class="cta-form" id="quoteForm" novalidate>
+          <div class="cta-input-row">
+            <input type="email" id="emailInput" placeholder="you@yourcompany.com" autocomplete="email" aria-label="Work email">
+            <button type="submit">Get a Quote</button>
+          </div>
+          <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+          <div class="cta-note">We reply within one business day. No spam, ever.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <span class="brand-mark">V</span>
+          <span class="brand-text">
+            Vertex Forge
+            <small>Industries</small>
+          </span>
+        </div>
+        <p>Precision metal manufacturing for aerospace, robotics and industrial equipment. Family-owned since 1993.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="YouTube">▶</a>
+          <a href="#" aria-label="X">✕</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#capabilities">CNC Machining</a></li>
+          <li><a href="#capabilities">Sheet Fabrication</a></li>
+          <li><a href="#capabilities">Finishing &amp; Anodize</a></li>
+          <li><a href="#capabilities">Inspection &amp; CMM</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#process">Our Process</a></li>
+          <li><a href="#numbers">Scale &amp; Capacity</a></li>
+          <li><a href="#clients">Client Stories</a></li>
+          <li><a href="#quote">Request a Quote</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-contact">
+          <li><span>📍</span><span>4180 Ironworks Parkway, Rockford, IL 61109, United States</span></li>
+          <li><span>📞</span><span><a href="tel:+18155550142">+1 (815) 555-0142</a></span></li>
+          <li><span>✉️</span><span><a href="mailto:quotes@vertexforgeind.com">quotes@vertexforgeind.com</a></span></li>
+          <li><span>🕐</span><span>Mon–Fri, 6:00–18:00 CST</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Vertex Forge Industries, Inc. All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Quality Manual</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.getElementById('burger');
+  var navMobile = document.getElementById('navMobile');
+
+  burger.addEventListener('click', function(){
+    var open = navMobile.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  navMobile.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      navMobile.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+    });
+  });
+
+  /* ---------- Sticky header shadow ---------- */
+  var header = document.getElementById('header');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('scrolled', window.scrollY > 12);
+  }, {passive:true});
+
+  /* ---------- Tabs ---------- */
+  var tabButtons = document.querySelectorAll('.tab-btn');
+  tabButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabButtons.forEach(function(b){
+        b.classList.remove('active');
+        b.setAttribute('aria-selected','false');
+      });
+      document.querySelectorAll('.tab-panel').forEach(function(p){
+        p.classList.remove('active');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected','true');
+      var panel = document.getElementById(btn.dataset.tab);
+      if(panel) panel.classList.add('active');
+    });
+  });
+
+  /* ---------- Quote basket counter ---------- */
+  var cartCount = document.getElementById('cartCount');
+  var cartBtn = document.getElementById('cartBtn');
+  var count = 0;
+
+  function bumpCounter(){
+    cartCount.classList.add('bump');
+    setTimeout(function(){ cartCount.classList.remove('bump'); }, 220);
+  }
+
+  // Clicking the cart "adds" a quote line — a small but real-feeling interaction.
+  cartBtn.addEventListener('click', function(){
+    count++;
+    cartCount.textContent = count;
+    bumpCounter();
+    showToast('Added to quote basket — ' + count + (count === 1 ? ' line item' : ' line items'));
+  });
+
+  /* ---------- Toast ---------- */
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+
+  function showToast(message){
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      toast.classList.remove('show');
+    }, 2600);
+  }
+
+  /* ---------- Email validation ---------- */
+  var form = document.getElementById('quoteForm');
+  var emailInput = document.getElementById('emailInput');
+  var formMsg = document.getElementById('formMsg');
+  var emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+  emailInput.addEventListener('input', function(){
+    emailInput.classList.remove('invalid');
+    formMsg.textContent = '';
+    formMsg.className = 'form-msg';
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var value = emailInput.value.trim();
+
+    if(value === ''){
+      emailInput.classList.add('invalid');
+      formMsg.textContent = 'Please enter your email address.';
+      formMsg.className = 'form-msg error';
+      emailInput.focus();
+      return;
+    }
+
+    if(!emailPattern.test(value)){
+      emailInput.classList.add('invalid');
+      formMsg.textContent = 'That doesn\u2019t look like a valid email. Check the format and try again.';
+      formMsg.className = 'form-msg error';
+      emailInput.focus();
+      return;
+    }
+
+    emailInput.classList.remove('invalid');
+    formMsg.textContent = 'Thanks! A manufacturing engineer will reply within one business day.';
+    formMsg.className = 'form-msg success';
+    showToast('📬 Quote request sent to ' + value);
+    emailInput.value = '';
+  });
+
+})();
+</script>
+</body>
+</html>

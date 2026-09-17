@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Flow — Real-time data pipelines for modern teams</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232563eb'/><text x='50' y='70' font-size='64' font-weight='800' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>N</text></svg>">
+  <style>
+    /* Reset and base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f8fafc;
+      --text-primary: #0b1b2b;
+      --text-secondary: #33475b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo:hover {
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .header-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: white;
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface);
+      color: var(--text-primary);
+      text-decoration: none;
+      border-color: #cbd5e1;
+    }
+
+    .btn-lg {
+      padding: 14px 28px;
+      font-size: 1rem;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--text-primary);
+    }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      right: 0;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow-lg);
+      z-index: 49;
+    }
+
+    .mobile-nav.open {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 8px 0;
+      text-decoration: none;
+    }
+
+    .mobile-nav a:hover {
+      color: var(--text-primary);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 96px 0 80px;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eff6ff;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 24px;
+      border: 1px solid #dbeafe;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta {
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-meta svg {
+      width: 16px;
+      height: 16px;
+      color: var(--accent);
+    }
+
+    /* Code card */
+    .code-card {
+      background: #0f172a;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid #1e293b;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .code-dot.red { background: #ef4444; }
+    .code-dot.yellow { background: #eab308; }
+    .code-dot.green { background: #22c55e; }
+
+    .code-filename {
+      margin-left: 12px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-family: var(--font-mono);
+    }
+
+    .code-body {
+      padding: 20px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .code-body .kw { color: #c084fc; }
+    .code-body .fn { color: #60a5fa; }
+    .code-body .str { color: #34d399; }
+    .code-body .cm { color: #64748b; }
+    .code-body .num { color: #fbbf24; }
+
+    /* Section styling */
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-alt {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      max-width: 640px;
+      margin-bottom: 64px;
+    }
+
+    .section-header.centered {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Features grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: all 0.2s ease;
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+    }
+
+    .feature-icon.blue { background: #eff6ff; color: var(--accent); }
+    .feature-icon.purple { background: #f5f3ff; color: #7c3aed; }
+    .feature-icon.green { background: #ecfdf5; color: #059669; }
+    .feature-icon.amber { background: #fffbeb; color: #d97706; }
+    .feature-icon.rose { background: #fff1f2; color: #e11d48; }
+    .feature-icon.cyan { background: #ecfeff; color: #0891b2; }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* Metrics */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 64px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-item {
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .metric-value .unit {
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Documentation preview */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .docs-sidebar {
+      position: sticky;
+      top: 96px;
+    }
+
+    .docs-nav {
+      list-style: none;
+      border-left: 2px solid var(--border);
+      padding-left: 0;
+    }
+
+    .docs-nav li {
+      margin-bottom: 4px;
+    }
+
+    .docs-nav a {
+      display: block;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      margin-left: -2px;
+      transition: all 0.15s ease;
+    }
+
+    .docs-nav a:hover {
+      color: var(--text-primary);
+      text-decoration: none;
+      border-left-color: #cbd5e1;
+    }
+
+    .docs-nav a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .docs-content h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      margin-top: 32px;
+      color: var(--text-primary);
+    }
+
+    .docs-content h3:first-child {
+      margin-top: 0;
+    }
+
+    .docs-content p {
+      margin-bottom: 20px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .docs-content ul {
+      margin-bottom: 24px;
+      padding-left: 24px;
+      color: var(--text-secondary);
+    }
+
+    .docs-content li {
+      margin-bottom: 8px;
+      line-height: 1.65;
+    }
+
+    .docs-content code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: #be185d;
+    }
+
+    .docs-note {
+      background: #f0f9ff;
+      border-left: 4px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 24px 0;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+    }
+
+    .docs-note strong {
+      color: var(--text-primary);
+    }
+
+    /* Testimonials */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .testimonial-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s ease;
+    }
+
+    .testimonial-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .testimonial-stars {
+      color: #fbbf24;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .author-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .author-info .name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .author-info .role {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* CTA section */
+    .cta-section {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .cta-section p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.7;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-white {
+      background: white;
+      color: #0f172a;
+    }
+
+    .btn-white:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      text-decoration: none;
+    }
+
+    .btn-outline-white {
+      background: transparent;
+      color: white;
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      text-decoration: none;
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* Footer */
+    .site-footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 64px 0 32px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 16px;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+
+    .footer-col h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 10px;
+    }
+
+    .footer-col a {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--border);
+      transition: all 0.15s ease;
+      font-size: 0.9rem;
+    }
+
+    .footer-social a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .hero h1 {
+        font-size: 2.75rem;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .docs-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .docs-sidebar {
+        position: static;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .header-cta .btn-ghost {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero {
+        padding: 64px 0 56px;
+      }
+
+      .hero h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .section {
+        padding: 64px 0;
+      }
+
+      .section-header h2 {
+        font-size: 1.75rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .metric-value {
+        font-size: 2rem;
+      }
+
+      .cta-section h2 {
+        font-size: 1.75rem;
+      }
+
+      .btn-lg {
+        width: 100%;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 0 16px;
+      }
+
+      .hero h1 {
+        font-size: 1.9rem;
+      }
+
+      .metrics-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .metric-value {
+        font-size: 1.75rem;
+      }
+
+      .metric-value .unit {
+        font-size: 1.1rem;
+      }
+
+      .feature-card {
+        padding: 24px;
+      }
+
+      .testimonial-card {
+        padding: 24px;
+      }
+
+      .code-body {
+        font-size: 0.7rem;
+        padding: 16px;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Focus visible */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* Selection */
+    ::selection {
+      background: #dbeafe;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">N</span>
+        Nexus Flow
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#docs">Documentation</a>
+        <a href="#customers">Customers</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+
+      <div class="header-cta">
+        <a href="#" class="btn btn-ghost">Sign in</a>
+        <a href="#" class="btn btn-primary">Start free</a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+    <a href="#features">Features</a>
+    <a href="#docs">Documentation</a>
+    <a href="#customers">Customers</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#" class="btn btn-primary" style="margin-top: 8px; justify-content: center;">Start free</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="dot"></span>
+            v3.2 now available — Stream joins &amp; windowing
+          </div>
+          <h1>Move data at the <span class="highlight">speed of thought</span></h1>
+          <p>
+            Nexus Flow is a real-time data pipeline platform that helps engineering teams
+            ingest, transform, and route event streams in milliseconds — without managing
+            brokers, clusters, or connectors.
+          </p>
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary btn-lg">Start building free</a>
+            <a href="#docs" class="btn btn-ghost btn-lg">Read the docs →</a>
+          </div>
+          <div class="hero-meta">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              No credit card required
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              10M events free / month
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-dot red"></span>
+              <span class="code-dot yellow"></span>
+              <span class="code-dot green"></span>
+              <span class="code-filename">pipeline.ts</span>
+            </div>
+            <div class="code-body">
+<span class="cm">// Create a real-time pipeline in seconds</span>
+<span class="kw">import</span> { <span class="fn">Pipeline</span> } <span class="kw">from</span> <span class="str">'@nexusflow/core'</span>;
+
+<span class="kw">const</span> pipeline = <span class="kw">new</span> <span class="fn">Pipeline</span>({
+  name: <span class="str">'orders-enrichment'</span>,
+  source: { type: <span class="str">'kafka'</span>, topic: <span class="str">'orders'</span> },
+  sink:   { type: <span class="str">'postgres'</span>, table: <span class="str">'orders_v2'</span> },
+});
+
+pipeline.<span class="fn">filter</span>(o => o.total &gt; <span class="num">100</span>)
+  .<span class="fn">enrich</span>(<span class="str">'customers'</span>, { key: <span class="str">'customerId'</span> })
+  .<span class="fn">window</span>({ size: <span class="str">'30s'</span>, type: <span class="str">'tumbling'</span> })
+  .<span class="fn">aggregate</span>({
+    revenue: { sum: <span class="str">'total'</span> },
+    orders:  { count: <span class="num">1</span> },
+  });
+
+<span class="kw">await</span> pipeline.<span class="fn">deploy</span>(); <span class="cm">// ✅ live in 12s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header centered">
+        <div class="section-label">Platform capabilities</div>
+        <h2>Everything you need to ship real-time data</h2>
+        <p>
+          From ingestion to transformation to delivery — Nexus Flow handles the hard parts
+          so your team can focus on building product.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon blue">⚡</div>
+          <h3>Sub-second latency</h3>
+          <p>Process millions of events per second with p99 latency under 250ms. Our edge-native architecture keeps data close to your users.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon purple">🔌</div>
+          <h3>150+ connectors</h3>
+          <p>Native integrations for Kafka, Postgres, Snowflake, BigQuery, S3, Stripe, Segment, and more. No custom glue code required.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon green">🛡️</div>
+          <h3>Exactly-once delivery</h3>
+          <p>Built-in idempotency and transactional sinks guarantee your data lands exactly once — even during failures and retries.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon amber">📊</div>
+          <h3>Live observability</h3>
+          <p>Real-time dashboards for throughput, lag, error rates, and schema drift. Set alerts and debug pipelines without leaving the UI.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon rose">🔒</div>
+          <h3>SOC 2 &amp; HIPAA</h3>
+          <p>End-to-end encryption, PII masking, audit logs, and regional data residency. Enterprise-grade security from day one.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon cyan">🧩</div>
+          <h3>Code-first or no-code</h3>
+          <p>Define pipelines in TypeScript, Python, or YAML — or build visually in the studio. Both stay in sync automatically.</p>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-row">
+        <div class="metric-item">
+          <div class="metric-value">4.2<span class="unit">B</span></div>
+          <div class="metric-label">Events processed daily</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">99.99<span class="unit">%</span></div>
+          <div class="metric-label">Uptime SLA</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">&lt;250<span class="unit">ms</span></div>
+          <div class="metric-label">p99 end-to-end latency</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-value">1,800<span class="unit">+</span></div>
+          <div class="metric-label">Engineering teams</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DOCUMENTATION ===== -->
+  <section class="section section-alt" id="docs">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Documentation</div>
+        <h2>Get up and running in minutes</h2>
+        <p>
+          Clear, practical guides for every step — from your first pipeline to production
+          scale. Written by engineers, for engineers.
+        </p>
+      </div>
+
+      <div class="docs-grid">
+        <aside class="docs-sidebar">
+          <ul class="docs-nav">
+            <li><a href="#" class="active">Quickstart</a></li>
+            <li><a href="#">Core concepts</a></li>
+            <li><a href="#">Pipelines &amp; transforms</a></li>
+            <li><a href="#">Connectors</a></li>
+            <li><a href="#">Error handling</a></li>
+            <li><a href="#">Deployment</a></li>
+            <li><a href="#">API reference</a></li>
+          </ul>
+        </aside>
+
+        <div class="docs-content">
+          <h3>Quickstart</h3>
+          <p>
+            Get your first pipeline running in under five minutes. You'll need Node.js 18+
+            and a Nexus Flow account (the free tier is perfect for this).
+          </p>
+
+          <p><strong>1. Install the CLI</strong></p>
+          <p><code>npm install -g @nexusflow/cli</code></p>
+
+          <p><strong>2. Authenticate</strong></p>
+          <p><code>nexus auth login</code></p>
+
+          <p><strong>3. Initialize a project</strong></p>
+          <p><code>nexus init my-first-pipeline</code></p>
+
+          <div class="docs-note">
+            <strong>💡 Tip:</strong> The CLI scaffolds a working pipeline with a sample
+            source, transform, and sink. You can deploy it immediately with
+            <code>nexus deploy</code>.
+          </div>
+
+          <p><strong>4. Deploy</strong></p>
+          <p><code>nexus deploy --watch</code></p>
+          <p>
+            The <code>--watch</code> flag streams logs to your terminal and redeploys
+            automatically whenever you save a file. Your pipeline will be live in seconds.
+          </p>
+
+          <h3>Next steps</h3>
+          <ul>
+            <li>Read about <a href="#">core concepts</a> to understand the execution model</li>
+            <li>Browse the <a href="#">connector catalog</a> to connect your data sources</li>
+            <li>Learn how to <a href="#">handle errors and retries</a> in production</li>
+            <li>Explore the <a href="#">API reference</a> for programmatic control</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="section" id="customers">
+    <div class="container">
+      <div class="section-header centered">
+        <div class="section-label">Customer stories</div>
+        <h2>Trusted by teams who can't afford downtime</h2>
+        <p>
+          From fast-growing startups to Fortune 500 enterprises — engineering teams rely on
+          Nexus Flow to keep their data moving.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "We replaced three internal services and a Kafka cluster with Nexus Flow.
+            Our event processing costs dropped 60% and we shipped our new billing pipeline
+            in a single afternoon."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background: #2563eb;">MK</div>
+            <div class="author-info">
+              <div class="name">Maya Krishnan</div>
+              <div class="role">Staff Engineer, Lattice</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "The observability alone is worth it. We caught a schema drift issue in
+            production within 30 seconds and fixed it before any data was corrupted.
+            That would've been a multi-hour incident before."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background: #7c3aed;">DR</div>
+            <div class="author-info">
+              <div class="name">Daniel Reyes</div>
+              <div class="role">Head of Platform, Ramp</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">
+            "As a small team, we don't have time to manage infrastructure. Nexus Flow
+            gives us enterprise-grade streaming without the ops overhead. It just works."
+          </p>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background: #059669;">SL</div>
+            <div class="author-info">
+              <div class="name">Sofia Lindqvist</div>
+              <div class="role">CTO, Arvo Health</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section" id="pricing">
+    <div class="container">
+      <h2>Start building today</h2>
+      <p>
+        Join 1,800+ engineering teams already using Nexus Flow. Free tier includes
+        10M events per month, unlimited pipelines, and community support.
+      </p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-white btn-lg">Create free account</a>
+        <a href="#" class="btn btn-outline-white btn-lg">Talk to sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <span class="logo-mark">N</span>
+            Nexus Flow
+          </a>
+          <p>
+            Real-time data pipelines for modern engineering teams. Built in San Francisco,
+            trusted worldwide.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Integrations</a></li>
+            <li><a href="#">Changelog</a></li>
+            <li><a href="#">Status</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">API Reference</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Community</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Customers</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Legal</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2025 Nexus Flow, Inc. All rights reserved.</div>
+        <div class="footer-social">
+          <a href="#" aria-label="GitHub" title="GitHub">GH</a>
+          <a href="#" aria-label="Twitter" title="Twitter">TW</a>
+          <a href="#" aria-label="LinkedIn" title="LinkedIn">LI</a>
+          <a href="#" aria-label="Discord" title="Discord">DC</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    (function() {
+      'use strict';
+
+      // Mobile menu toggle
+      var menuBtn = document.getElementById('mobileMenuBtn');
+      var mobileNav = document.getElementById('mobileNav');
+
+      if (menuBtn && mobileNav) {
+        menuBtn.addEventListener('click', function() {
+          mobileNav.classList.toggle('open');
+        });
+
+        // Close mobile nav when a link is clicked
+        mobileNav.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', function() {
+            mobileNav.classList.remove('open');
+          });
+        });
+      }
+
+      // Close mobile nav on window resize above breakpoint
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && mobileNav) {
+          mobileNav.classList.remove('open');
+        }
+      });
+
+      // Docs nav active state
+      var docsLinks = document.querySelectorAll('.docs-nav a');
+      docsLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          docsLinks.forEach(function(l) { l.classList.remove('active'); });
+          this.classList.add('active');
+        });
+      });
+
+      // Smooth scroll for anchor links (with sticky header offset)
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          var targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          var target = document.querySelector(targetId);
+          if (target) {
+            e.preventDefault();
+            var headerOffset = 80;
+            var elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+            var offsetPosition = elementPosition - headerOffset;
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Simple scroll reveal animation
+      if ('IntersectionObserver' in window) {
+        var observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -40px 0px'
+        };
+
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .testimonial-card, .metric-item, .code-card').forEach(function(el) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(16px)';
+          el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          observer.observe(el);
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
