@@ -1,6 +1,6 @@
-car-shop.html
-cafe.html
-docs.html
-news.html
-travel-deeper.html
-vertex-forge-industries.html
+sites/car-shop.html
+sites/cafe.html
+sites/docs.html
+sites/news.html
+sites/travel-deeper.html
+sites/vertex-forge-industries.html
