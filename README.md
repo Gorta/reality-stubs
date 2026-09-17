@@ -26,6 +26,7 @@ A curated collection of standalone HTML templates — each one a complete, self-
 3. Done
 
 **Structure**
+```
 reality-stubs/
 ├── list.txt
 ├── README.md
@@ -38,6 +39,7 @@ reality-stubs/
     ├── travel-deeper.html
     ├── vertex-forge-industries.html
     └── ... (more added regularly)
+```
 
 **Adding your own**
 
@@ -69,6 +71,7 @@ MIT — use them however you want.
 3. Готово
 
 **Структура**
+```
 reality-stubs/
 ├── list.txt
 ├── README.md
@@ -81,3 +84,4 @@ reality-stubs/
     ├── travel-deeper.html
     ├── vertex-forge-industries.html
     └── ... (регулярно добавляются новые)
+```
