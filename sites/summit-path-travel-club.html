@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Summit Path · Hiking & adventure travel club in Denver</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2315803d'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>🏔</text></svg>">
+  <style>
+    /* ---------- CSS variables: custom palette ---------- */
+    :root {
+      --primary: #15803d;        /* forest green */
+      --primary-dark: #166534;
+      --deep: #14532d;
+      --accent: #f59e0b;         /* trail-marker amber */
+      --accent-soft: #fef3c7;
+      --sky: #e0f2fe;
+      --earth: #78350f;
+      --bg: #f7faf7;
+      --surface: #ffffff;
+      --text: #14281d;
+      --text-light: #55705f;
+      --border: #d6e8d9;
+      --shadow-sm: 0 6px 18px -8px rgba(20, 83, 45, 0.18);
+      --shadow-md: 0 20px 38px -16px rgba(20, 83, 45, 0.26);
+      --shadow-lg: 0 30px 55px -22px rgba(20, 83, 45, 0.34);
+      --radius-sm: 10px;
+      --radius-md: 20px;
+      --radius-lg: 32px;
+      --radius-pill: 999px;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ---------- global reset & base ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ---------- typography ---------- */
+    h1, h2, h3 {
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 7.5vw, 3.9rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.22rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- utility ---------- */
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+      max-width: 720px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-soft);
+      color: var(--earth);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+
+    /* ---------- header / nav ---------- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      background: rgba(247, 250, 247, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--deep);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--deep) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo-text small {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .nav a:hover {
+      color: var(--primary);
+    }
+
+    .cart-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cart-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .cart-count {
+      background: var(--accent);
+      color: var(--earth);
+      border-radius: var(--radius-pill);
+      padding: 0.05rem 0.5rem;
+      font-size: 0.76rem;
+      font-weight: 800;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* ---------- mobile menu ---------- */
+    @media (max-width: 760px) {
+      .nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.1rem;
+        padding: 1.2rem 0 0.5rem;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+      }
+
+      .nav.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .cart-btn {
+        margin-left: auto;
+      }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding: 3rem 0 4rem;
+    }
+
+    @media (min-width: 820px) {
+      .hero {
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+      }
+
+      .hero-content {
+        flex: 1.05;
+      }
+
+      .hero-visual {
+        flex: 0.95;
+      }
+    }
+
+    .hero-content p {
+      font-size: 1.18rem;
+      max-width: 540px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-facts {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .hero-fact strong {
+      display: block;
+      font-size: 1.7rem;
+      color: var(--primary);
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .hero-fact span {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      padding: 0.9rem 2rem;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-dark);
+      border-color: var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 1.2rem;
+    }
+
+    .hero-visual {
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      aspect-ratio: 1 / 0.92;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      background: linear-gradient(160deg, #134e4a 0%, var(--deep) 45%, #1e3a2f 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 25% 15%, rgba(245, 158, 11, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 80% 85%, rgba(224, 242, 254, 0.18) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      color: white;
+    }
+
+    .hero-card .peaks {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+      display: block;
+      filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.6));
+    }
+
+    .hero-card h3 {
+      color: white;
+      font-size: 1.35rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-card p {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.95rem;
+      margin-bottom: 1.3rem;
+    }
+
+    .hero-tags {
+      display: flex;
+      justify-content: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-tags span {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: var(--radius-pill);
+      padding: 0.3rem 0.85rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- trips grid ---------- */
+    .trips-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    @media (min-width: 640px) {
+      .trips-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1020px) {
+      .trips-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .trip-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .trip-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .trip-art {
+      height: 118px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trip-art::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(20, 40, 29, 0.7) 100%);
+    }
+
+    .trip-art span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .trip-1 { background: linear-gradient(135deg, #86efac, #15803d 70%); }
+    .trip-2 { background: linear-gradient(135deg, #fcd34d, #b45309 70%); }
+    .trip-3 { background: linear-gradient(135deg, #7dd3fc, #0c4a6e 70%); }
+    .trip-4 { background: linear-gradient(135deg, #fda4af, #9f1239 70%); }
+    .trip-5 { background: linear-gradient(135deg, #d8b4fe, #6b21a8 70%); }
+    .trip-6 { background: linear-gradient(135deg, #a7f3d0, #065f46 70%); }
+
+    .trip-body {
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .trip-body p {
+      flex: 1;
+    }
+
+    .trip-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .trip-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .trip-level {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.2rem 0.7rem;
+      border-radius: var(--radius-pill);
+      margin-bottom: 0.8rem;
+    }
+
+    .level-easy { background: #dcfce7; color: #166534; }
+    .level-moderate { background: var(--accent-soft); color: #92400e; }
+    .level-hard { background: #fee2e2; color: #991b1b; }
+
+    /* ---------- why us / approach ---------- */
+    .approach {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    @media (min-width: 820px) {
+      .approach {
+        grid-template-columns: 1.2fr 1fr;
+        align-items: center;
+      }
+    }
+
+    .approach-body p + p {
+      margin-top: 1rem;
+    }
+
+    .approach-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .approach-list li {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.3rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+    }
+
+    .approach-list li strong {
+      display: block;
+      color: var(--deep);
+      margin-bottom: 0.2rem;
+    }
+
+    .approach-list li span {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .approach-list li p {
+      font-size: 0.95rem;
+    }
+
+    /* ---------- stats band ---------- */
+    .stats-band {
+      background: var(--deep);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 720px) {
+      .stats-band {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-number {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    /* ---------- accordion ---------- */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .accordion-item {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s;
+    }
+
+    .accordion-item.active {
+      border-color: var(--primary);
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.6rem;
+      cursor: pointer;
+      font-weight: 700;
+      background: var(--surface);
+      transition: background 0.2s;
+      color: var(--text);
+      gap: 1rem;
+    }
+
+    .accordion-header:hover {
+      background: #eef7f0;
+    }
+
+    .accordion-header .icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 0.25s;
+      color: var(--primary);
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+
+    .accordion-item.active .accordion-header .icon {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 1.6rem;
+      background: var(--surface);
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 280px;
+      padding: 0 1.6rem 1.5rem;
+    }
+
+    .accordion-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .accordion-content .author {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-box {
+      background: linear-gradient(140deg, var(--primary) 0%, var(--deep) 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '🏔';
+      position: absolute;
+      font-size: 15rem;
+      right: -2rem;
+      bottom: -5rem;
+      opacity: 0.09;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .cta-box h2 {
+      color: white;
+      margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box p {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 560px) {
+      .subscribe-form {
+        flex-direction: row;
+      }
+    }
+
+    .subscribe-form input {
+      flex: 1;
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius-pill);
+      border: 2px solid transparent;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+      color: var(--text);
+    }
+
+    .subscribe-form input:focus {
+      border-color: var(--accent);
+    }
+
+    .subscribe-form button {
+      background: var(--accent);
+      color: var(--earth);
+      font-weight: 800;
+      padding: 0.95rem 2rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .subscribe-form button:hover {
+      background: #fbbf24;
+      transform: scale(1.02);
+    }
+
+    .form-message {
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+      color: #fff8e1;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 3rem 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      color: var(--text-light);
+    }
+
+    @media (min-width: 720px) {
+      .footer {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 1rem;
+    }
+
+    .footer h4 {
+      color: var(--deep);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+    }
+
+    .footer ul {
+      list-style: none;
+    }
+
+    .footer li {
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    /* ---------- misc ---------- */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-mark">🏔</span>
+      <span class="logo-text">
+        Summit Path
+        <small>Travel Club</small>
+      </span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav class="nav" id="mainNav">
+      <a href="#trips">Trips</a>
+      <a href="#why">Why us</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Join</a>
+      <button class="cart-btn" id="cartButton" aria-label="Trip bag">
+        🎒 My trips <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">🥾 Denver · Small-group adventures since 2011</div>
+        <h1>Find your trail. Find your people.</h1>
+        <p>Weekend hikes, multi-day treks, and international adventures — guided by local experts. No experience needed for most trips, and all gear can be borrowed from our clubhouse.</p>
+
+        <div class="hero-facts">
+          <div class="hero-fact">
+            <strong>3,800+</strong>
+            <span>Members</span>
+          </div>
+          <div class="hero-fact">
+            <strong>46</strong>
+            <span>Trips per year</span>
+          </div>
+          <div class="hero-fact">
+            <strong>14</strong>
+            <span>Countries visited</span>
+          </div>
+        </div>
+
+        <div class="hero-cta">
+          <a href="#contact" class="btn">Join the club</a>
+          <a href="#trips" class="btn btn-outline">Browse trips</a>
+        </div>
+        <div class="hero-note">
+          ⭐ 4.9 / 5 from 900+ trip reviews · No membership fee for your first season
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <span class="peaks">🏔</span>
+          <h3>Adventure, minus the guesswork</h3>
+          <p>Routes planned, permits sorted, transport arranged. You just show up with a daypack and good shoes.</p>
+          <div class="hero-tags">
+            <span>Hiking</span>
+            <span>Trekking</span>
+            <span>Camping</span>
+            <span>International</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRIPS -->
+    <section class="section" id="trips">
+      <div class="section-header">
+        <div class="badge">🗺 Upcoming trips</div>
+        <h2>Where we're heading next</h2>
+        <p>Every trip is capped at 12 people, led by a certified guide, and includes a pre-trip briefing night at the clubhouse.</p>
+      </div>
+      <div class="trips-grid">
+        <div class="trip-card">
+          <div class="trip-art trip-1"><span>🌲</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-easy">Easy</span>
+            <h3>Rocky Mountain Weekend</h3>
+            <p>Two days of alpine lakes and wildflower meadows in Rocky Mountain National Park. Cabin lodging included.</p>
+            <div class="trip-meta">
+              <span>📅 Oct 18–20</span>
+              <span>💵 $280</span>
+            </div>
+          </div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-art trip-2"><span>🏜</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-moderate">Moderate</span>
+            <h3>Moab Canyon Trek</h3>
+            <p>Three days of red-rock canyons and slickrock in Utah. Camping under the stars with a local guide.</p>
+            <div class="trip-meta">
+              <span>📅 Nov 7–10</span>
+              <span>💵 $420</span>
+            </div>
+          </div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-art trip-3"><span>❄️</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-moderate">Moderate</span>
+            <h3>Winter Snowshoe Weekend</h3>
+            <p>Snowshoe through silent forests and frozen lakes near Breckenridge. All snow gear provided.</p>
+            <div class="trip-meta">
+              <span>📅 Dec 13–15</span>
+              <span>💵 $310</span>
+            </div>
+          </div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-art trip-4"><span>🌋</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-hard">Challenging</span>
+            <h3>Patagonia Expedition</h3>
+            <p>Ten days trekking in Torres del Paine. Full board, bilingual guide, and a rest day in Puerto Natales.</p>
+            <div class="trip-meta">
+              <span>📅 Feb 3–13</span>
+              <span>💵 $2,450</span>
+            </div>
+          </div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-art trip-5"><span>🌸</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-easy">Easy</span>
+            <h3>Kyoto Cherry Blossom Walk</h3>
+            <p>Eight days in Japan during sakura season. Temple trails, local cuisine, and a guided day in Nara.</p>
+            <div class="trip-meta">
+              <span>📅 Mar 28–Apr 5</span>
+              <span>💵 $1,980</span>
+            </div>
+          </div>
+        </div>
+        <div class="trip-card">
+          <div class="trip-art trip-6"><span>🏝</span></div>
+          <div class="trip-body">
+            <span class="trip-level level-moderate">Moderate</span>
+            <h3>Dolomites Summer Traverse</h3>
+            <p>Seven days hut-to-hut through the Italian Dolomites. Spectacular views, hearty mountain food.</p>
+            <div class="trip-meta">
+              <span>📅 Jul 12–19</span>
+              <span>💵 $1,650</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section class="section" id="why">
+      <div class="section-header">
+        <div class="badge">🎒 Why Summit Path</div>
+        <h2>More than a hiking group</h2>
+      </div>
+      <div class="approach">
+        <div class="approach-body">
+          <p>We started Summit Path in 2011 with six friends and a beat-up van. Today we're a 3,800-member club with certified guides, a clubhouse in RiNo, and trips on four continents.</p>
+          <p>What hasn't changed: we plan every detail so you can focus on the trail, the views, and the people beside you. No competition, no ego — just good company and honest adventure.</p>
+        </div>
+        <ul class="approach-list">
+          <li>
+            <span>🧭</span>
+            <div>
+              <strong>Certified guides</strong>
+              <p>Every trip is led by a Wilderness First Responder with local route knowledge.</p>
+            </div>
+          </li>
+          <li>
+            <span>🎒</span>
+            <div>
+              <strong>Gear library</strong>
+              <p>Tents, packs, poles, and snowshoes — borrow for free as a member.</p>
+            </div>
+          </li>
+          <li>
+            <span>🚐</span>
+            <div>
+              <strong>Transport sorted</strong>
+              <p>Van pickups from our RiNo clubhouse on every trip. No carpool chaos.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- STATS + FAQ -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <div class="badge">❓ Good to know</div>
+        <h2>Questions, answered</h2>
+        <p>Can't find your question? Drop us a line at hello@summitpath.club or call (720) 555-0139.</p>
+      </div>
+
+      <div class="stats-band" style="margin-bottom: 3rem;">
+        <div>
+          <div class="stat-number">3,800+</div>
+          <div class="stat-label">Active members</div>
+        </div>
+        <div>
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">Trip rating</div>
+        </div>
+        <div>
+          <div class="stat-number">46</div>
+          <div class="stat-label">Trips each year</div>
+        </div>
+        <div>
+          <div class="stat-number">14</div>
+          <div class="stat-label">Years exploring</div>
+        </div>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Do I need to be very fit to join?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Most of our trips are marked Easy or Moderate and are suitable for anyone comfortable walking 8–12 km a day. Challenging trips require some training, and we'll send a prep plan when you book.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>What's included in the trip price?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Guiding, permits, transport from Denver, lodging or camping fees, and all meals on the trail. Personal gear, travel insurance, and flights (for international trips) are not included.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Is there a membership fee?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Your first season is free. After that, membership is $60/year and covers clubhouse access, gear library, social nights, and member-only trip discounts.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>What's your cancellation policy?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Full refund up to 30 days before a domestic trip and 60 days before international trips. Within those windows, we'll try to fill your spot and refund if we succeed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / JOIN -->
+    <section class="section" id="contact">
+      <div class="cta-box">
+        <h2>Your next adventure starts here</h2>
+        <p>Leave your email and we'll send our trip calendar, membership details, and a free trail guide for Colorado.</p>
+        <form class="subscribe-form" id="subscribeForm">
+          <input type="email" id="emailInput" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit">Get the calendar</button>
+        </form>
+        <div class="form-message" id="formMessage"></div>
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: rgba(255,255,255,0.85); position: relative; z-index: 1;">
+          📍 2850 Larimer St, Denver, CO 80205 · 📞 (720) 555-0139
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <span class="logo-mark">🏔</span>
+        <span class="logo-text">
+          Summit Path
+          <small>Travel Club</small>
+        </span>
+      </a>
+      <p style="margin-top: 1rem; max-width: 320px;">A Denver-based adventure club for hikers, trekkers, and curious travellers. Small groups, certified guides, and a shared love of the trail.</p>
+    </div>
+    <div>
+      <h4>Visit the clubhouse</h4>
+      <ul>
+        <li>📍 2850 Larimer St</li>
+        <li>Denver, CO 80205</li>
+        <li>📞 (720) 555-0139</li>
+        <li>✉️ hello@summitpath.club</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Club hours</h4>
+      <ul>
+        <li>Tue–Fri: 12pm – 8pm</li>
+        <li>Saturday: 10am – 6pm</li>
+        <li>Sun–Mon: Closed</li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Summit Path Travel Club. Denver, CO · Est. 2011. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ALL JS -->
+  <script>
+    (function() {
+      // ----- Mobile menu -----
+      const menuToggle = document.getElementById('menuToggle');
+      const mainNav = document.getElementById('mainNav');
+
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          mainNav.classList.toggle('active');
+        });
+
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('active');
+          });
+        });
+      }
+
+      // ----- Trip bag counter -----
+      const cartButton = document.getElementById('cartButton');
+      const cartCount = document.getElementById('cartCount');
+      let count = 0;
+
+      if (cartButton && cartCount) {
+        cartButton.addEventListener('click', function() {
+          count++;
+          cartCount.textContent = count;
+          cartCount.style.transform = 'scale(1.4)';
+          setTimeout(() => {
+            cartCount.style.transform = 'scale(1)';
+          }, 150);
+        });
+      }
+
+      // ----- FAQ accordion -----
+      const accordionItems = document.querySelectorAll('.accordion-item');
+      accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+          item.classList.toggle('active');
+        });
+      });
+
+      // ----- Subscription form validation -----
+      const subscribeForm = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('emailInput');
+      const formMessage = document.getElementById('formMessage');
+
+      if (subscribeForm && emailInput && formMessage) {
+        subscribeForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = emailInput.value.trim();
+
+          if (!email) {
+            formMessage.textContent = 'Please enter your email address.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            formMessage.textContent = 'That email doesn\'t look right. Try name@domain.com.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          formMessage.textContent = '✅ Sent! Check your inbox for the trip calendar and your free Colorado trail guide.';
+          formMessage.style.color = '#fff8e1';
+          emailInput.value = '';
+
+          setTimeout(() => {
+            formMessage.textContent = '';
+          }, 6000);
+        });
+      }
+
+      // ----- Close mobile menu on resize -----
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 760 && mainNav.classList.contains('active')) {
+          mainNav.classList.remove('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

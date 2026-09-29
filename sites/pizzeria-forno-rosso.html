@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forno Rosso — Wood-Fired Neapolitan Pizza</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23c0392b'/><text x='50' y='74' font-size='62' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>🍕</text></svg>">
+<style>
+:root {
+  --accent: #c0392b;
+  --accent-dark: #8e2a1f;
+  --accent-soft: #f4d6d2;
+  --ink: #1c1a17;
+  --ink-soft: #4a4540;
+  --cream: #fdf8f2;
+  --cream-warm: #f7ede0;
+  --line: #e6d9c8;
+  --gold: #d4a03c;
+  --radius-sm: 8px;
+  --radius: 16px;
+  --radius-lg: 28px;
+  --shadow-sm: 0 2px 6px rgba(28, 26, 23, 0.06);
+  --shadow: 0 10px 30px rgba(28, 26, 23, 0.10);
+  --shadow-lg: 0 24px 60px rgba(28, 26, 23, 0.16);
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.65;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, svg { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); }
+h2 { font-size: clamp(1.9rem, 4vw, 2.9rem); }
+h3 { font-size: 1.3rem; }
+
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+/* ---------- Header ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 248, 242, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.logo span em { color: var(--accent); font-style: normal; }
+
+.nav-desktop {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-desktop a {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-desktop a:hover { color: var(--accent); background: var(--accent-soft); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-btn {
+  position: relative;
+  background: var(--ink);
+  color: var(--cream);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s, background 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.cart-btn:hover { background: var(--accent); transform: translateY(-1px); }
+.cart-btn:active { transform: translateY(0) scale(0.97); }
+
+.cart-count {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: transform 0.25s;
+}
+
+.cart-btn:hover .cart-count { background: #fff; color: var(--accent); }
+.cart-count.bump { animation: bump 0.4s ease; }
+
+@keyframes bump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+.burger {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  gap: 5px;
+  padding: 0;
+}
+
+.burger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-mobile {
+  display: none;
+  flex-direction: column;
+  padding: 12px 20px 24px;
+  border-top: 1px solid var(--line);
+  background: var(--cream);
+}
+
+.nav-mobile.open { display: flex; }
+
+.nav-mobile a {
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.nav-mobile a:hover { color: var(--accent); }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(212, 160, 60, 0.18), transparent 42%),
+    radial-gradient(circle at 12% 88%, rgba(192, 57, 43, 0.14), transparent 46%),
+    var(--cream-warm);
+  padding: 60px 0 70px;
+}
+
+.hero-grid {
+  display: grid;
+  gap: 44px;
+  align-items: center;
+}
+
+.hero-copy { max-width: 560px; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.hero-badge .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #2e9e5b;
+  box-shadow: 0 0 0 3px rgba(46, 158, 91, 0.18);
+}
+
+.hero h1 { margin-bottom: 18px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+
+.hero p.lead {
+  font-size: 1.08rem;
+  color: var(--ink-soft);
+  margin-bottom: 30px;
+  max-width: 480px;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 34px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(192, 57, 43, 0.28);
+}
+
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(192, 57, 43, 0.34); }
+
+.btn-ghost {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.hero-stat strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hero-stat span { font-size: 0.82rem; color: var(--ink-soft); letter-spacing: 0.02em; }
+
+.hero-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.pizza-card {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, #f6c453 0 46%, #e8a93b 46% 52%, #d98c2b 52% 58%, #c17a22 58% 62%, #b06a1c 62% 100%);
+  box-shadow: var(--shadow-lg), inset 0 0 60px rgba(140, 70, 10, 0.35);
+  display: grid;
+  place-items: center;
+  animation: floaty 6s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+
+.pepperoni {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e05a45, #a52a1c 78%);
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.basil {
+  position: absolute;
+  width: 26px; height: 20px;
+  background: #3f8f3d;
+  border-radius: 60% 40% 55% 45% / 60% 55% 45% 40%;
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2);
+}
+
+.hero-tag {
+  position: absolute;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line);
+}
+
+.hero-tag.top { top: 6%; right: -4%; animation: floaty 5s ease-in-out infinite 0.8s; }
+.hero-tag.bottom { bottom: 8%; left: -4%; animation: floaty 5.6s ease-in-out infinite 0.4s; }
+
+.hero-tag .ico {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+}
+
+.hero-tag small { display: block; font-weight: 500; color: var(--ink-soft); font-size: 0.72rem; }
+
+/* ---------- Strip ---------- */
+.strip {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 18px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.strip-track {
+  display: inline-flex;
+  gap: 46px;
+  animation: marquee 26s linear infinite;
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.strip-track span { display: inline-flex; align-items: center; gap: 46px; }
+.strip-track span::after { content: "✦"; color: var(--gold); margin-left: 46px; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- Sections ---------- */
+section { padding: 72px 0; }
+
+.section-head {
+  max-width: 620px;
+  margin-bottom: 44px;
+}
+
+.section-head p { color: var(--ink-soft); margin-top: 14px; font-size: 1.02rem; }
+
+/* ---------- Menu / Tabs ---------- */
+.menu-section { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+
+.tab {
+  padding: 11px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab:hover { border-color: var(--accent); color: var(--accent); }
+
+.tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(192, 57, 43, 0.26);
+}
+
+.menu-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+.menu-item {
+  display: flex;
+  gap: 18px;
+  padding: 22px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  animation: fadeUp 0.45s ease both;
+}
+
+.menu-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--accent-soft);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-thumb {
+  flex: 0 0 74px;
+  height: 74px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.9rem;
+  background: radial-gradient(circle at 35% 30%, #f6c453, #d98c2b 70%, #b06a1c);
+  box-shadow: inset 0 -4px 10px rgba(120, 60, 10, 0.3);
+}
+
+.menu-body { flex: 1; min-width: 0; }
+
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.menu-top h3 { font-size: 1.12rem; }
+
+.price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.menu-body p { font-size: 0.9rem; color: var(--ink-soft); }
+
+.menu-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.tag.gold { background: rgba(212, 160, 60, 0.18); color: #8a6415; }
+
+.add-btn {
+  align-self: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.add-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: rotate(90deg); }
+
+/* ---------- Features ---------- */
+.features-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 1fr;
+}
+
+.feature {
+  padding: 32px 26px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.feature:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  background: var(--accent-soft);
+}
+
+.feature:nth-child(2) .feature-icon { background: rgba(212, 160, 60, 0.2); }
+.feature:nth-child(3) .feature-icon { background: rgba(46, 158, 91, 0.16); }
+
+.feature h3 { margin-bottom: 10px; }
+.feature p { font-size: 0.92rem; color: var(--ink-soft); }
+
+/* ---------- Story / Numbers ---------- */
+.story { background: var(--cream-warm); }
+
+.story-grid {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+.story-copy h2 { margin-bottom: 18px; }
+.story-copy p { color: var(--ink-soft); margin-bottom: 16px; }
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.number-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.number-card strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.number-card span { font-size: 0.8rem; color: var(--ink-soft); font-weight: 600; letter-spacing: 0.03em; }
+
+/* ---------- Testimonials ---------- */
+.testi-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 1fr;
+}
+
+.testi {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 30px 26px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.testi:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+
+.stars { color: var(--gold); letter-spacing: 2px; font-size: 0.95rem; }
+
+.testi blockquote {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #fff;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.testi-author strong { display: block; font-size: 0.92rem; }
+.testi-author span { font-size: 0.78rem; color: var(--ink-soft); }
+
+/* ---------- Accordion ---------- */
+.faq-section { background: #fff; border-top: 1px solid var(--line); }
+
+.accordion { max-width: 760px; margin: 0 auto; }
+
+.acc-item {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  overflow: hidden;
+  background: var(--cream);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.acc-item.open { border-color: var(--accent); box-shadow: var(--shadow-sm); }
+
+.acc-head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.acc-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  transition: transform 0.3s, background 0.2s, color 0.2s;
+}
+
+.acc-item.open .acc-icon { transform: rotate(45deg); background: var(--accent); color: #fff; }
+
+.acc-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.acc-body p {
+  padding: 0 22px 22px;
+  color: var(--ink-soft);
+  font-size: 0.93rem;
+}
+
+/* ---------- CTA ---------- */
+.cta-section { padding: 0 0 72px; }
+
+.cta-box {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(212, 160, 60, 0.22), transparent 40%),
+    linear-gradient(140deg, var(--accent-dark), var(--accent) 70%);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 52px 30px;
+  box-shadow: var(--shadow-lg);
+  display: grid;
+  gap: 32px;
+}
+
+.cta-box h2 { color: #fff; margin-bottom: 12px; }
+.cta-box p { color: rgba(255, 255, 255, 0.86); margin-bottom: 26px; max-width: 460px; }
+
+.cta-form { display: flex; flex-direction: column; gap: 12px; max-width: 480px; }
+
+.field-row { display: flex; flex-direction: column; gap: 10px; }
+
+.cta-input {
+  flex: 1;
+  padding: 15px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  min-width: 0;
+}
+
+.cta-input::placeholder { color: rgba(255, 255, 255, 0.6); }
+
+.cta-input:focus { border-color: #fff; background: rgba(255, 255, 255, 0.2); }
+
+.cta-input.invalid { border-color: #ffd166; background: rgba(255, 209, 102, 0.16); }
+
+.btn-light {
+  background: #fff;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+.btn-light:hover { background: var(--cream-warm); transform: translateY(-2px); }
+
+.form-msg {
+  font-size: 0.85rem;
+  min-height: 1.2em;
+  color: #ffe9a8;
+  font-weight: 500;
+}
+
+.form-msg.ok { color: #c8f7d4; }
+
+.cta-contacts {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.cta-contact {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+}
+
+.cta-contact .ico {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.cta-contact strong { display: block; font-size: 0.94rem; }
+.cta-contact span { font-size: 0.82rem; color: rgba(255, 255, 255, 0.78); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  background: var(--ink);
+  color: rgba(253, 248, 242, 0.72);
+  padding: 60px 0 28px;
+}
+
+.footer-grid {
+  display: grid;
+  gap: 36px;
+  margin-bottom: 44px;
+}
+
+.footer-brand .logo { color: var(--cream); margin-bottom: 16px; }
+.footer-brand p { font-size: 0.9rem; max-width: 320px; }
+
+.footer-col h4 {
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.footer-col ul { list-style: none; display: grid; gap: 11px; }
+
+.footer-col a, .footer-col li { font-size: 0.9rem; }
+
+.footer-col a:hover { color: var(--gold); }
+
+.socials { display: flex; gap: 10px; margin-top: 20px; }
+
+.socials a {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(253, 248, 242, 0.08);
+  border: 1px solid rgba(253, 248, 242, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.socials a:hover { background: var(--accent); transform: translateY(-3px); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(253, 248, 242, 0.12);
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.footer-bottom a:hover { color: var(--gold); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translate(-50%, 120%);
+  background: var(--ink);
+  color: var(--cream);
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  max-width: calc(100vw - 40px);
+}
+
+.toast.show { transform: translate(-50%, 0); }
+
+/* ---------- Responsive ---------- */
+@media (min-width: 640px) {
+  .menu-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .testi-grid { grid-template-columns: repeat(2, 1fr); }
+  .field-row { flex-direction: row; }
+  .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+}
+
+@media (min-width: 900px) {
+  .nav-desktop { display: flex; }
+  .burger { display: none; }
+  .hero { padding: 80px 0 96px; }
+  .hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 60px; }
+  .story-grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+  .features-grid { grid-template-columns: repeat(3, 1fr); }
+  .testi-grid { grid-template-columns: repeat(3, 1fr); }
+  .cta-box { grid-template-columns: 1.2fr 0.8fr; padding: 64px 56px; align-items: center; }
+  .footer-grid { grid-template-columns: 1.6fr 1fr 1fr 1fr; }
+  section { padding: 96px 0; }
+}
+
+@media (min-width: 1100px) {
+  .menu-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark">🍕</span>
+      <span>Forno <em>Rosso</em></span>
+    </a>
+
+    <nav class="nav-desktop">
+      <a href="#menu">Menu</a>
+      <a href="#craft">Our Craft</a>
+      <a href="#story">Story</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="cart-btn" id="cartBtn" type="button" aria-label="Open cart">
+        <span aria-hidden="true">🛒</span>
+        <span>Cart</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="burger" id="burger" type="button" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-mobile" id="navMobile">
+    <a href="#menu">Menu</a>
+    <a href="#craft">Our Craft</a>
+    <a href="#story">Story</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="hero-badge"><span class="dot"></span> Open today until 23:00 · 2 ovens firing</span>
+        <h1>Naples in every <em>charred</em> crust.</h1>
+        <p class="lead">
+          Forno Rosso bakes true Neapolitan pizza at 485°C for exactly 90 seconds.
+          Slow-fermented dough, San Marzano tomatoes, and mozzarella pulled the same morning.
+        </p>
+        <div class="hero-cta">
+          <a href="#menu" class="btn btn-primary">Explore the menu →</a>
+          <a href="#story" class="btn btn-ghost">Our story</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>90s</strong><span>Bake time</span></div>
+          <div class="hero-stat"><strong>48h</strong><span>Dough proof</span></div>
+          <div class="hero-stat"><strong>4.9★</strong><span>1,240 reviews</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="pizza-card">
+          <span class="pepperoni" style="width:13%;height:13%;top:16%;left:22%;"></span>
+          <span class="pepperoni" style="width:12%;height:12%;top:30%;right:20%;"></span>
+          <span class="pepperoni" style="width:14%;height:14%;bottom:22%;left:30%;"></span>
+          <span class="pepperoni" style="width:11%;height:11%;bottom:30%;right:28%;"></span>
+          <span class="pepperoni" style="width:10%;height:10%;top:44%;left:44%;"></span>
+          <span class="basil" style="top:22%;left:52%;"></span>
+          <span class="basil" style="bottom:20%;left:18%;transform:rotate(35deg);"></span>
+          <span class="basil" style="top:58%;right:16%;transform:rotate(-25deg);"></span>
+        </div>
+        <div class="hero-tag top">
+          <span class="ico">🔥</span>
+          <span>Wood-fired<small>Oak &amp; beech blend</small></span>
+        </div>
+        <div class="hero-tag bottom">
+          <span class="ico">🌿</span>
+          <span>Daily mozzarella<small>From Campania dairies</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP -->
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <span>San Marzano tomatoes</span>
+      <span>48-hour dough</span>
+      <span>Wood-fired oven</span>
+      <span>Campania mozzarella</span>
+      <span>Naples tradition since 1987</span>
+      <span>San Marzano tomatoes</span>
+      <span>48-hour dough</span>
+      <span>Wood-fired oven</span>
+      <span>Campania mozzarella</span>
+      <span>Naples tradition since 1987</span>
+    </div>
+  </div>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">The Menu</span>
+        <h2>Baked to order, never held under a lamp.</h2>
+        <p>Every pie is stretched by hand, topped, and slid into the oven the moment you order it.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Menu categories">
+        <button class="tab active" data-tab="classics" role="tab" aria-selected="true">Classics</button>
+        <button class="tab" data-tab="signature" role="tab" aria-selected="false">Signature</button>
+        <button class="tab" data-tab="sides" role="tab" aria-selected="false">Sides &amp; Drinks</button>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="craft">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">Our Craft</span>
+        <h2>Three rules we never break.</h2>
+        <p>Simple ingredients treated with patience — that's the whole secret.</p>
+      </div>
+
+      <div class="features-grid">
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🌾</div>
+          <h3>48-Hour Dough</h3>
+          <p>We ferment our dough slowly at room temperature for two full days. It develops a deep, nutty flavour and a crust that puffs beautifully without ever feeling heavy.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🔥</div>
+          <h3>485°C Wood Oven</h3>
+          <p>Our hand-built brick oven runs on oak and beech. At 485 degrees, a pizza bakes in ninety seconds — charred at the edge, soft at the centre.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon" aria-hidden="true">🧀</div>
+          <h3>Morning Mozzarella</h3>
+          <p>Fresh mozzarella arrives from Campania dairies every morning. We tear it by hand, never slice it, so it melts into soft, milky pockets.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="container story-grid">
+      <div class="story-copy">
+        <span class="section-label">Our Story</span>
+        <h2>A family oven, lit every morning since 1987.</h2>
+        <p>
+          Forno Rosso began in a narrow Naples alley, when nonna Elena Rizzo started baking for neighbours
+          who lined up before dawn. Her grandson Marco brought the same recipes — and the same stubborn
+          attention to detail — to this city in 2012.
+        </p>
+        <p>
+          Today our two ovens still fire up at 6 a.m. The dough is mixed by hand, the tomatoes are crushed
+          by hand, and Marco still tastes every batch of sauce before service.
+        </p>
+      </div>
+
+      <div class="numbers">
+        <div class="number-card"><strong>1987</strong><span>First oven lit</span></div>
+        <div class="number-card"><strong>38</strong><span>Seats in the dining room</span></div>
+        <div class="number-card"><strong>1,240+</strong><span>Five-star reviews</span></div>
+        <div class="number-card"><strong>9</strong><span>Pizzaioli on the team</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section id="reviews">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-label">Reviews</span>
+        <h2>What our regulars say.</h2>
+        <p>Over a thousand five-star reviews — here are a few of our favourites.</p>
+      </div>
+
+      <div class="testi-grid">
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>"The crust has that perfect leopard spotting. I've been to Naples twice and this is the closest thing I've found outside of it."</blockquote>
+          <div class="testi-author">
+            <div class="avatar" style="background:#c0392b;">SR</div>
+            <div><strong>Simone Ricci</strong><span>Food writer, The Weekend Table</span></div>
+          </div>
+        </article>
+
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>"We order every Friday without fail. The Diavola is ridiculous — spicy, smoky, and the chilli oil on the side is dangerous."</blockquote>
+          <div class="testi-author">
+            <div class="avatar" style="background:#d4a03c;">HK</div>
+            <div><strong>Hannah Kowalski</strong><span>Regular since 2019</span></div>
+          </div>
+        </article>
+
+        <article class="testi">
+          <div class="stars" aria-label="5 out of 5 stars">★★★★★</div>
+          <blockquote>"Took my parents for their anniversary. The team brought out a dessert pizza with a candle — small touch, huge impression. We'll be back."</blockquote>
+          <div class="testi-author">
+            <div class="avatar" style="background:#2e9e5b;">DO</div>
+            <div><strong>Daniel Okafor</strong><span>Local guide, 87 reviews</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-head" style="margin-left:auto;margin-right:auto;text-align:center;">
+        <span class="section-label">Good to know</span>
+        <h2>Questions, answered.</h2>
+      </div>
+
+      <div class="accordion" id="accordion">
+        <div class="acc-item">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span>Do you take reservations?</span>
+            <span class="acc-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body"><p>Yes — we hold tables for parties of two or more. Book up to 30 days ahead by phone or through the form below. Walk-ins are always welcome at the bar counter.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span>Is there a gluten-free option?</span>
+            <span class="acc-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body"><p>We offer a gluten-free base baked in a separate area of the kitchen. It's prepared on dedicated trays, though our kitchen does handle wheat flour daily.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span>How long is the wait on weekends?</span>
+            <span class="acc-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body"><p>Friday and Saturday evenings typically run a 20–35 minute wait after 7 p.m. Join the waitlist by phone and we'll text you when your table is ready.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head" type="button" aria-expanded="false">
+            <span>Do you deliver?</span>
+            <span class="acc-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="acc-body"><p>We deliver within a 4 km radius. Neapolitan pizza is best eaten immediately, so we pack each box with a vented lid to keep the crust crisp on the way.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <span class="section-label" style="color:#ffe9a8;">Stay in the loop</span>
+          <h2>Get a free garlic focaccia on your first order.</h2>
+          <p>Join our newsletter for seasonal specials, oven-side stories, and a welcome treat. No spam — just pizza.</p>
+
+          <form class="cta-form" id="subscribeForm" novalidate>
+            <div class="field-row">
+              <input class="cta-input" type="text" id="subName" placeholder="Your first name" autocomplete="given-name">
+              <input class="cta-input" type="email" id="subEmail" placeholder="you@email.com" autocomplete="email">
+            </div>
+            <button class="btn btn-light" type="submit">Subscribe 🍕</button>
+            <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+        <div class="cta-contacts">
+          <div class="cta-contact">
+            <span class="ico" aria-hidden="true">📍</span>
+            <div><strong>Forno Rosso</strong><span>14 Marigold Lane, Riverbend, RB2 7QT</span></div>
+          </div>
+          <div class="cta-contact">
+            <span class="ico" aria-hidden="true">📞</span>
+            <div><strong>+44 20 7946 0813</strong><span>Daily from 11:00 to 23:00</span></div>
+          </div>
+          <div class="cta-contact">
+            <span class="ico" aria-hidden="true">✉️</span>
+            <div><strong>hello@fornorosso.co</strong><span>We reply within a day</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="logo"><span class="logo-mark">🍕</span><span>Forno <em>Rosso</em></span></a>
+        <p>True Neapolitan pizza, baked in a wood-fired oven since 1987. Family-run, fiercely traditional, and always better with friends.</p>
+        <div class="socials">
+          <a href="#top" aria-label="Instagram">📷</a>
+          <a href="#top" aria-label="Facebook">👍</a>
+          <a href="#top" aria-label="TikTok">🎵</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <ul>
+          <li>14 Marigold Lane</li>
+          <li>Riverbend, RB2 7QT</li>
+          <li>Mon–Sun · 11:00–23:00</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#craft">Our Craft</a></li>
+          <li><a href="#story">Story</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+442079460813">+44 20 7946 0813</a></li>
+          <li><a href="mailto:hello@fornorosso.co">hello@fornorosso.co</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2025 Forno Rosso. All rights reserved.</span>
+      <span>Baked with oak, beech, and a little bit of stubbornness.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.getElementById('burger');
+  var navMobile = document.getElementById('navMobile');
+
+  burger.addEventListener('click', function () {
+    var open = navMobile.classList.toggle('open');
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  navMobile.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      navMobile.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ---------- Menu tabs ---------- */
+  var MENU = {
+    classics: [
+      { icon: '🍅', name: 'Margherita D.O.P.', price: '£11.50', desc: 'San Marzano tomatoes, fior di latte, fresh basil, extra-virgin olive oil.', tags: ['Vegetarian', 'Classic'] },
+      { icon: '🌿', name: 'Marinara', price: '£9.00', desc: 'Crushed tomatoes, garlic, oregano, olive oil. No cheese — just Naples.', tags: ['Vegan'] },
+      { icon: '🧀', name: 'Quattro Formaggi', price: '£13.50', desc: 'Fior di latte, gorgonzola, smoked provola, and aged parmesan.', tags: ['Vegetarian'] },
+      { icon: '🌶️', name: 'Diavola', price: '£13.00', desc: 'Spicy salami, fior di latte, chilli honey, and a side of our chilli oil.', tags: ['Spicy'] }
+    ],
+    signature: [
+      { icon: '🥓', name: 'Nonna Elena', price: '£15.50', desc: 'Pancetta, caramelised onion, smoked provola, rosemary, and cracked pepper.', tags: ['Signature'], gold: true },
+      { icon: '🍄', name: 'Bosco', price: '£14.50', desc: 'Wild mushrooms, truffle cream, fior di latte, and toasted hazelnuts.', tags: ['Vegetarian', 'Signature'], gold: true },
+      { icon: '🐟', name: 'Anchovy & Lemon', price: '£14.00', desc: 'Cantabrian anchovies, lemon zest, capers, and a touch of chilli.', tags: ['Signature'], gold: true },
+      { icon: '🎃', name: 'Autumn Squash', price: '£13.50', desc: 'Roasted butternut, sage brown butter, gorgonzola, and pumpkin seeds.', tags: ['Vegetarian', 'Seasonal'], gold: true }
+    ],
+    sides: [
+      { icon: '🥖', name: 'Garlic Focaccia', price: '£5.00', desc: 'Wood-oven focaccia with roasted garlic, rosemary, and sea salt.', tags: ['Vegetarian'] },
+      { icon: '🥗', name: 'Rocket & Parmesan', price: '£6.50', desc: 'Wild rocket, shaved parmesan, lemon dressing, and toasted pine nuts.', tags: ['Vegetarian'] },
+      { icon: '🫒', name: 'Marinated Olives', price: '£4.50', desc: 'Cerignola olives with orange peel, fennel seed, and chilli.', tags: ['Vegan'] },
+      { icon: '🥤', name: 'Blood Orange Soda', price: '£3.50', desc: 'House-made Sicilian blood orange soda, lightly sparkling.', tags: ['Vegan'] }
+    ]
+  };
+
+  var menuGrid = document.getElementById('menuGrid');
+  var tabs = document.querySelectorAll('.tab');
+
+  function renderMenu(key) {
+    var items = MENU[key] || [];
+    menuGrid.innerHTML = items.map(function (item, i) {
+      var tags = item.tags.map(function (t) {
+        return '<span class="tag' + (item.gold ? ' gold' : '') + '">' + t + '</span>';
+      }).join('');
+      return '' +
+        '<article class="menu-item" style="animation-delay:' + (i * 60) + 'ms">' +
+          '<div class="menu-thumb" aria-hidden="true">' + item.icon + '</div>' +
+          '<div class="menu-body">' +
+            '<div class="menu-top"><h3>' + item.name + '</h3><span class="price">' + item.price + '</span></div>' +
+            '<p>' + item.desc + '</p>' +
+            '<div class="menu-tags">' + tags + '</div>' +
+          '</div>' +
+          '<button class="add-btn" type="button" aria-label="Add ' + item.name + ' to cart" data-name="' + item.name + '">+</button>' +
+        '</article>';
+    }).join('');
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      tabs.forEach(function (t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      renderMenu(tab.dataset.tab);
+    });
+  });
+
+  renderMenu('classics');
+
+  /* ---------- Cart counter ---------- */
+  var cartCount = document.getElementById('cartCount');
+  var cartBtn = document.getElementById('cartBtn');
+  var count = 0;
+
+  function bumpCount() {
+    count++;
+    cartCount.textContent = count;
+    cartCount.classList.remove('bump');
+    void cartCount.offsetWidth;
+    cartCount.classList.add('bump');
+  }
+
+  menuGrid.addEventListener('click', function (e) {
+    var btn = e.target.closest('.add-btn');
+    if (!btn) return;
+    bumpCount();
+    showToast('Added ' + btn.dataset.name + ' to your cart');
+  });
+
+  cartBtn.addEventListener('click', function () {
+    if (count === 0) {
+      showToast('Your cart is empty — add something delicious');
+    } else {
+      showToast(count + (count === 1 ? ' item' : ' items') + ' in your cart');
+    }
+  });
+
+  /* ---------- Toast ---------- */
+  var toast = document.getElementById('toast');
+  var toastTimer;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 2400);
+  }
+
+  /* ---------- Accordion ---------- */
+  var accItems = document.querySelectorAll('.acc-item');
+
+  accItems.forEach(function (item) {
+    var head = item.querySelector('.acc-head');
+    var body = item.querySelector('.acc-body');
+
+    head.addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+
+      accItems.forEach(function (other) {
+        other.classList.remove('open');
+        other.querySelector('.acc-body').style.maxHeight = null;
+        other.querySelector('.acc-head').setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+        head.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  /* ---------- Subscribe form ---------- */
+  var form = document.getElementById('subscribeForm');
+  var nameInput = document.getElementById('subName');
+  var emailInput = document.getElementById('subEmail');
+  var formMsg = document.getElementById('formMsg');
+  var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    nameInput.classList.remove('invalid');
+    emailInput.classList.remove('invalid');
+    formMsg.classList.remove('ok');
+
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim();
+
+    if (name.length < 2) {
+      nameInput.classList.add('invalid');
+      formMsg.textContent = 'Please tell us your first name (at least 2 characters).';
+      nameInput.focus();
+      return;
+    }
+
+    if (!emailPattern.test(email)) {
+      emailInput.classList.add('invalid');
+      formMsg.textContent = 'That email doesn\'t look right — check it and try again.';
+      emailInput.focus();
+      return;
+    }
+
+    formMsg.classList.add('ok');
+    formMsg.textContent = 'Grazie, ' + name + '! Check your inbox for your welcome focaccia.';
+    showToast('Welcome to the Forno Rosso family 🍕');
+    form.reset();
+  });
+
+  [nameInput, emailInput].forEach(function (input) {
+    input.addEventListener('input', function () {
+      input.classList.remove('invalid');
+      formMsg.textContent = '';
+      formMsg.classList.remove('ok');
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

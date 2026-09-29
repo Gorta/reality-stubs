@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>BrightSmile Dental · Modern dentistry in Chicago</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231e4b6b'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>🦷</text></svg>">
+  <style>
+    /* ---------- CSS variables: custom palette ---------- */
+    :root {
+      --primary: #1e4b6b;        /* deep teal-blue */
+      --primary-light: #2d6a8f;
+      --accent: #e6b15c;         /* warm gold */
+      --accent-soft: #f7e9d7;
+      --bg: #f6fafd;
+      --surface: #ffffff;
+      --text: #1a2c3e;
+      --text-light: #4f6579;
+      --border: #d3e2ee;
+      --shadow-sm: 0 8px 20px -6px rgba(0, 30, 50, 0.08);
+      --shadow-md: 0 18px 30px -10px rgba(0, 40, 60, 0.12);
+      --radius-sm: 14px;
+      --radius-md: 24px;
+      --radius-lg: 36px;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ---------- global reset & base ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ---------- typography ---------- */
+    h1, h2, h3 {
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 8vw, 4rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- utility ---------- */
+    .container {
+      width: 100%;
+    }
+
+    .section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+      max-width: 700px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(230, 177, 92, 0.3);
+    }
+
+    /* ---------- header / nav ---------- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .logo span {
+      font-size: 1.9rem;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.2s;
+      font-size: 1rem;
+    }
+
+    .nav a:hover {
+      color: var(--accent);
+    }
+
+    .cart-btn {
+      background: transparent;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .cart-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .cart-count {
+      background: var(--accent);
+      color: var(--primary);
+      border-radius: 30px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* ---------- mobile menu ---------- */
+    @media (max-width: 700px) {
+      .nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem 0 0.5rem;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+      }
+
+      .nav.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .header {
+        padding: 1rem 0;
+      }
+
+      .cart-btn {
+        margin-left: auto;
+      }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 3rem 0 4rem;
+    }
+
+    @media (min-width: 768px) {
+      .hero {
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+      }
+
+      .hero-content {
+        flex: 1;
+      }
+
+      .hero-visual {
+        flex: 1;
+      }
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      max-width: 550px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .hero-visual {
+      background: linear-gradient(145deg, var(--primary) 0%, #2a5e7a 100%);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      aspect-ratio: 1 / 0.9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-visual svg {
+      width: 100%;
+      height: auto;
+      max-width: 320px;
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.15));
+    }
+
+    /* ---------- features grid ---------- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 600px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 992px) {
+      .features-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 2rem 1.8rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* ---------- team / doctors ---------- */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 600px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 992px) {
+      .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .doctor-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .doctor-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      margin: 0 auto 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .doctor-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .doctor-title {
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .doctor-card p {
+      font-size: 0.95rem;
+    }
+
+    /* ---------- testimonials + accordion ---------- */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .accordion-item {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 1.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--surface);
+      transition: background 0.2s;
+      color: var(--primary);
+    }
+
+    .accordion-header:hover {
+      background: #f0f6fb;
+    }
+
+    .accordion-header span {
+      font-size: 1.5rem;
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+
+    .accordion-item.active .accordion-header span {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 1.8rem;
+      background: var(--surface);
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 200px;
+      padding: 0 1.8rem 1.5rem;
+    }
+
+    .accordion-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .testimonial-author {
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 0.5rem;
+    }
+
+    /* ---------- stats row ---------- */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    @media (min-width: 600px) {
+      .stats-row {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-item {
+      background: var(--surface);
+      padding: 1.8rem 0.5rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+
+    /* ---------- subscription form ---------- */
+    .subscribe-box {
+      background: linear-gradient(135deg, var(--primary) 0%, #1a3e55 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .subscribe-box h2 {
+      color: white;
+      margin-bottom: 0.75rem;
+    }
+
+    .subscribe-box p {
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 500px) {
+      .subscribe-form {
+        flex-direction: row;
+      }
+    }
+
+    .subscribe-form input {
+      flex: 1;
+      padding: 0.9rem 1.4rem;
+      border-radius: 60px;
+      border: none;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: 2px solid transparent;
+      transition: outline 0.2s;
+    }
+
+    .subscribe-form input:focus {
+      outline: 2px solid var(--accent);
+    }
+
+    .subscribe-form button {
+      background: var(--accent);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .subscribe-form button:hover {
+      background: #f0c27b;
+      transform: scale(1.02);
+    }
+
+    .form-message {
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+      color: var(--accent-soft);
+      font-weight: 500;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 3rem 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      color: var(--text-light);
+    }
+
+    @media (min-width: 700px) {
+      .footer {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 1rem;
+    }
+
+    .footer h4 {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+    }
+
+    .footer ul {
+      list-style: none;
+    }
+
+    .footer li {
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    /* ---------- misc ---------- */
+    .emoji-icon {
+      font-size: 1.4rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span>🦷</span> BrightSmile
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav class="nav" id="mainNav">
+      <a href="#services">Services</a>
+      <a href="#doctors">Our dentists</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+      <button class="cart-btn" id="cartButton" aria-label="Shopping cart">
+        🛒 Cart <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">★ 4.9 · 1200+ happy smiles</div>
+        <h1>Healthy teeth,<br>confident smile.</h1>
+        <p>Modern dentistry in the heart of Chicago. Pain-free treatments, digital diagnostics, and a team that truly cares.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn">Book appointment</a>
+          <a href="#services" class="btn btn-outline">Explore services</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tooth illustration">
+          <path d="M100 25 C70 25 50 45 50 75 C50 105 65 125 75 145 C80 155 85 165 90 165 C95 165 98 155 100 145 C102 155 105 165 110 165 C115 165 120 155 125 145 C135 125 150 105 150 75 C150 45 130 25 100 25 Z" fill="white" opacity="0.95" />
+          <circle cx="75" cy="70" r="5" fill="#e6b15c" />
+          <circle cx="125" cy="70" r="5" fill="#e6b15c" />
+          <path d="M80 100 Q100 120 120 100" stroke="#1e4b6b" stroke-width="4" fill="none" stroke-linecap="round" />
+        </svg>
+      </div>
+    </section>
+
+    <!-- FEATURES / SERVICES -->
+    <section class="section" id="services">
+      <div class="section-header">
+        <div class="badge">What we do</div>
+        <h2>Complete care for your smile</h2>
+        <p>From routine check-ups to full smile makeovers — all under one roof.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">🪥</span>
+          <h3>Preventive dentistry</h3>
+          <p>Regular cleanings, exams, and sealants to keep cavities away. Gentle and thorough.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">✨</span>
+          <h3>Teeth whitening</h3>
+          <p>Professional in-office whitening. Get up to 8 shades brighter in one visit.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🦷</span>
+          <h3>Invisalign & braces</h3>
+          <p>Discreet orthodontic solutions for teens and adults. Free consultation included.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔧</span>
+          <h3>Restorative care</h3>
+          <p>Implants, crowns, and bridges that look and feel natural. Built to last.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🧒</span>
+          <h3>Pediatric dentistry</h3>
+          <p>Kid-friendly visits that build positive associations with dental care for life.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🚨</span>
+          <h3>Emergency care</h3>
+          <p>Same-day appointments for urgent issues. Call us — we’ll fit you in.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCTORS / TEAM -->
+    <section class="section" id="doctors">
+      <div class="section-header">
+        <div class="badge">Meet the team</div>
+        <h2>Dentists you can trust</h2>
+        <p>Board-certified, compassionate, and obsessed with detail.</p>
+      </div>
+      <div class="team-grid">
+        <div class="doctor-card">
+          <div class="doctor-avatar">👩‍⚕️</div>
+          <h3>Dr. Amelia Hart</h3>
+          <div class="doctor-title">DDS · Cosmetic & restorative</div>
+          <p>15+ years of experience. Known for gentle care and flawless veneers.</p>
+        </div>
+        <div class="doctor-card">
+          <div class="doctor-avatar">👨‍⚕️</div>
+          <h3>Dr. Marcus Chen</h3>
+          <div class="doctor-title">DMD · Orthodontics</div>
+          <p>Invisalign specialist. Has straightened over 2,000 smiles across Chicago.</p>
+        </div>
+        <div class="doctor-card">
+          <div class="doctor-avatar">👩‍⚕️</div>
+          <h3>Dr. Priya Nair</h3>
+          <div class="doctor-title">DDS · Pediatric dentistry</div>
+          <p>Kids love her. Parents trust her. Making dentistry fun since 2012.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS + TESTIMONIALS / ACCORDION -->
+    <section class="section" id="reviews">
+      <div class="section-header">
+        <div class="badge">Real results</div>
+        <h2>What our patients say</h2>
+        <p>Over 1,200 five-star reviews and counting.</p>
+      </div>
+
+      <div class="stats-row" style="margin-bottom: 3rem;">
+        <div class="stat-item">
+          <div class="stat-number">12k+</div>
+          <div class="stat-label">Patients treated</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">Average rating</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">25</div>
+          <div class="stat-label">Years in Chicago</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Would recommend</div>
+        </div>
+      </div>
+
+      <div class="accordion" id="testimonialAccordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“I used to dread the dentist. Not anymore.”</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Dr. Hart and her team made me feel completely at ease. The office is spotless, the technology is modern, and my new crowns look incredible.</p>
+            <p class="testimonial-author">— Rachel M., Lincoln Park</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“My kids actually ask to go to the dentist!”</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Dr. Nair is a magician with children. She explains everything in a fun way, and the prizes at the end are a huge hit. Thank you BrightSmile!</p>
+            <p class="testimonial-author">— David K., Lakeview</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“Invisalign was seamless from start to finish.”</span>
+            <span>+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Dr. Chen mapped out the whole process and I could see my progress digitally. 10 months later, my teeth are perfectly straight. Highly recommend.</p>
+            <p class="testimonial-author">— Sophia T., Wicker Park</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / SUBSCRIBE -->
+    <section class="section" id="contact">
+      <div class="subscribe-box">
+        <h2>Ready for a healthier smile?</h2>
+        <p>Book your appointment today or join our newsletter for tips and exclusive offers.</p>
+        <form class="subscribe-form" id="subscribeForm">
+          <input type="email" id="emailInput" placeholder="Your email address" aria-label="Email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="form-message" id="formMessage"></div>
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: rgba(255,255,255,0.7);">📍 401 N Michigan Ave, Chicago · 📞 (312) 555-8742</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <a href="#" class="logo"><span>🦷</span> BrightSmile</a>
+      <p style="margin-top: 1rem; max-width: 280px;">Modern dentistry with a human touch. Serving Chicago since 1999.</p>
+    </div>
+    <div>
+      <h4>Visit us</h4>
+      <ul>
+        <li>📍 401 N Michigan Ave, Suite 1200</li>
+        <li>Chicago, IL 60611</li>
+        <li>📞 (312) 555-8742</li>
+        <li>✉️ hello@brightsmile.dental</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Hours</h4>
+      <ul>
+        <li>Mon–Fri: 8am – 7pm</li>
+        <li>Saturday: 9am – 4pm</li>
+        <li>Sunday: Closed</li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      © 2025 BrightSmile Dental Studio. All rights reserved. · Designed with care in Chicago.
+    </div>
+  </footer>
+
+  <!-- ALL JS -->
+  <script>
+    (function() {
+      // ----- Mobile menu toggle -----
+      const menuToggle = document.getElementById('menuToggle');
+      const mainNav = document.getElementById('mainNav');
+
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          mainNav.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link (for better UX)
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('active');
+          });
+        });
+      }
+
+      // ----- Cart counter (simple demo) -----
+      const cartButton = document.getElementById('cartButton');
+      const cartCount = document.getElementById('cartCount');
+      let count = 0;
+
+      if (cartButton && cartCount) {
+        cartButton.addEventListener('click', function() {
+          count++;
+          cartCount.textContent = count;
+          // Micro-interaction: pop effect
+          cartCount.style.transform = 'scale(1.4)';
+          setTimeout(() => {
+            cartCount.style.transform = 'scale(1)';
+          }, 150);
+        });
+      }
+
+      // ----- Accordion -----
+      const accordionItems = document.querySelectorAll('.accordion-item');
+      accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+          // Optional: close others? We'll keep it simple: toggle each independently.
+          item.classList.toggle('active');
+        });
+      });
+
+      // ----- Subscription form validation -----
+      const subscribeForm = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('emailInput');
+      const formMessage = document.getElementById('formMessage');
+
+      if (subscribeForm && emailInput && formMessage) {
+        subscribeForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = emailInput.value.trim();
+
+          // Simple validation
+          if (!email) {
+            formMessage.textContent = 'Please enter your email address.';
+            formMessage.style.color = '#ffb3b3';
+            return;
+          }
+
+          // Regex for basic email pattern
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            formMessage.textContent = 'Please enter a valid email address (e.g., name@domain.com).';
+            formMessage.style.color = '#ffb3b3';
+            return;
+          }
+
+          // Success simulation
+          formMessage.textContent = '✅ Thanks! You’re subscribed. Check your inbox for a welcome gift.';
+          formMessage.style.color = '#e6e0c0';
+          emailInput.value = '';
+
+          // Clear message after 6 seconds
+          setTimeout(() => {
+            formMessage.textContent = '';
+          }, 6000);
+        });
+      }
+
+      // ----- Smooth close mobile menu on resize (if open) -----
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 700 && mainNav.classList.contains('active')) {
+          mainNav.classList.remove('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pure Thread Cleaners · Dry cleaning & laundry in Seattle</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230d9488'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>👔</text></svg>">
+  <style>
+    /* ---------- CSS variables: custom palette ---------- */
+    :root {
+      --primary: #0d9488;        /* teal */
+      --primary-dark: #0f766e;
+      --accent: #f0abfc;         /* soft lilac */
+      --accent-strong: #c026d3;
+      --accent-soft: #fae8ff;
+      --mint: #ccfbf1;
+      --bg: #f6fbfa;
+      --surface: #ffffff;
+      --text: #0f2e2b;
+      --text-light: #53746f;
+      --border: #d4ebe7;
+      --shadow-sm: 0 6px 18px -8px rgba(13, 148, 136, 0.16);
+      --shadow-md: 0 20px 38px -16px rgba(13, 148, 136, 0.24);
+      --shadow-lg: 0 30px 55px -22px rgba(13, 148, 136, 0.32);
+      --radius-sm: 12px;
+      --radius-md: 22px;
+      --radius-lg: 34px;
+      --radius-pill: 999px;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ---------- global reset & base ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ---------- typography ---------- */
+    h1, h2, h3 {
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 7.5vw, 3.8rem);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.22rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- utility ---------- */
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+      max-width: 720px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--mint);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    /* ---------- header / nav ---------- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      background: rgba(246, 251, 250, 0.92);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent-strong) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo-text small {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .nav a:hover {
+      color: var(--primary);
+    }
+
+    .cart-btn {
+      background: var(--primary);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cart-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .cart-count {
+      background: var(--accent-strong);
+      color: white;
+      border-radius: var(--radius-pill);
+      padding: 0.05rem 0.5rem;
+      font-size: 0.76rem;
+      font-weight: 800;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* ---------- mobile menu ---------- */
+    @media (max-width: 760px) {
+      .nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.1rem;
+        padding: 1.2rem 0 0.5rem;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+      }
+
+      .nav.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .cart-btn {
+        margin-left: auto;
+      }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding: 3rem 0 4rem;
+    }
+
+    @media (min-width: 820px) {
+      .hero {
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+      }
+
+      .hero-content {
+        flex: 1.05;
+      }
+
+      .hero-visual {
+        flex: 0.95;
+      }
+    }
+
+    .hero-content p {
+      font-size: 1.18rem;
+      max-width: 540px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      padding: 0.9rem 2rem;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-dark);
+      border-color: var(--primary);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 1.2rem;
+    }
+
+    .hero-visual {
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      aspect-ratio: 1 / 0.92;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      background: linear-gradient(150deg, var(--primary) 0%, var(--primary-dark) 55%, #134e4a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(240, 171, 252, 0.28);
+      top: -80px;
+      right: -60px;
+      filter: blur(8px);
+    }
+
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 3px dashed rgba(255, 255, 255, 0.22);
+      bottom: -60px;
+      left: -50px;
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      color: white;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-card .icon {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-card h3 {
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-card p {
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-chips {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-chips span {
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius-pill);
+      padding: 0.25rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* ---------- services grid ---------- */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    @media (min-width: 620px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .service-card {
+      background: var(--surface);
+      padding: 2rem 1.8rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .service-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .service-card p {
+      flex: 1;
+    }
+
+    .service-price {
+      margin-top: 1.2rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+    }
+
+    .service-price small {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-light);
+    }
+
+    /* ---------- how it works ---------- */
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 700px) {
+      .steps {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 2rem 1.8rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .step:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary-dark);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ---------- stats band ---------- */
+    .stats-band {
+      background: var(--primary-dark);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 720px) {
+      .stats-band {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-number {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-label {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    /* ---------- accordion ---------- */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .accordion-item {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s;
+    }
+
+    .accordion-item.active {
+      border-color: var(--primary);
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.6rem;
+      cursor: pointer;
+      font-weight: 700;
+      background: var(--surface);
+      transition: background 0.2s;
+      color: var(--text);
+      gap: 1rem;
+    }
+
+    .accordion-header:hover {
+      background: var(--mint);
+    }
+
+    .accordion-header .icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 0.25s;
+      color: var(--primary);
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+
+    .accordion-item.active .accordion-header .icon {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 1.6rem;
+      background: var(--surface);
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 260px;
+      padding: 0 1.6rem 1.5rem;
+    }
+
+    .accordion-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .accordion-content .author {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 0.92rem;
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-box {
+      background: linear-gradient(140deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '🧺';
+      position: absolute;
+      font-size: 15rem;
+      right: -2rem;
+      bottom: -5rem;
+      opacity: 0.09;
+      pointer-events: none;
+      line-height: 1;
+    }
+
+    .cta-box h2 {
+      color: white;
+      margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box p {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 560px) {
+      .subscribe-form {
+        flex-direction: row;
+      }
+    }
+
+    .subscribe-form input {
+      flex: 1;
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius-pill);
+      border: 2px solid transparent;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      background: white;
+      color: var(--text);
+    }
+
+    .subscribe-form input:focus {
+      border-color: var(--accent);
+    }
+
+    .subscribe-form button {
+      background: var(--accent);
+      color: var(--primary-dark);
+      font-weight: 800;
+      padding: 0.95rem 2rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .subscribe-form button:hover {
+      background: #f5c2ff;
+      transform: scale(1.02);
+    }
+
+    .form-message {
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+      color: #fff5ff;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 3rem 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      color: var(--text-light);
+    }
+
+    @media (min-width: 720px) {
+      .footer {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 1rem;
+    }
+
+    .footer h4 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+    }
+
+    .footer ul {
+      list-style: none;
+    }
+
+    .footer li {
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    /* ---------- misc ---------- */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-mark">👔</span>
+      <span class="logo-text">
+        Pure Thread
+        <small>Cleaners &amp; Laundry</small>
+      </span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav class="nav" id="mainNav">
+      <a href="#services">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Schedule pickup</a>
+      <button class="cart-btn" id="cartButton" aria-label="Garment bag">
+        🧺 Bag <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">✨ Free pickup &amp; delivery · Seattle metro</div>
+        <h1>Your clothes, cared for like new.</h1>
+        <p>Dry cleaning, laundry, alterations, and specialty garment care. We pick up from your door, treat every item by hand, and return it pressed, folded, and ready to wear.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn">Schedule a pickup</a>
+          <a href="#services" class="btn btn-outline">See services</a>
+        </div>
+        <div class="hero-note">
+          ⭐ 4.9 / 5 from 1,800+ customers · Same-week turnaround guaranteed
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="icon">🧺</div>
+          <h3>Fresh, folded, delivered.</h3>
+          <p>Order by 8pm and we'll collect the next morning. Eco-friendly solvents, hand-finished pressing.</p>
+          <div class="hero-chips">
+            <span>Dry clean</span>
+            <span>Laundry</span>
+            <span>Alterations</span>
+            <span>Leather</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="section" id="services">
+      <div class="section-header">
+        <div class="badge">🧼 What we do</div>
+        <h2>Services &amp; pricing</h2>
+        <p>Transparent prices, no hidden fees. Every garment is inspected, treated, and finished by hand before it comes back to you.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">👔</div>
+          <h3>Dry cleaning</h3>
+          <p>Suits, dresses, coats, and delicate fabrics. Eco-friendly solvent, hand-finished pressing, and stain treatment included.</p>
+          <div class="service-price">from $12 <small>per item</small></div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">👕</div>
+          <h3>Wash &amp; fold laundry</h3>
+          <p>Everyday laundry by weight. Sorted, washed with gentle detergent, and folded neatly in your own bag.</p>
+          <div class="service-price">$1.85 <small>per pound</small></div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">✂️</div>
+          <h3>Alterations &amp; repairs</h3>
+          <p>Hemming, taking in, zipper replacement, and button repairs. Skilled tailors with a 5-day turnaround.</p>
+          <div class="service-price">from $18 <small>per alteration</small></div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🧥</div>
+          <h3>Leather &amp; suede</h3>
+          <p>Specialist cleaning, conditioning, and colour restoration for jackets, bags, and boots.</p>
+          <div class="service-price">from $45 <small>per item</small></div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">👗</div>
+          <h3>Wedding dress care</h3>
+          <p>Gentle cleaning, boxed preservation, and archival storage so your dress stays pristine for decades.</p>
+          <div class="service-price">from $165 <small>full service</small></div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🛋️</div>
+          <h3>Home textiles</h3>
+          <p>Duvets, blankets, curtains, and rugs. Large-capacity machines handle even king-size bedding.</p>
+          <div class="service-price">from $28 <small>per item</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="section-header">
+        <div class="badge">🚚 Simple process</div>
+        <h2>How Pure Thread works</h2>
+        <p>Three steps from hamper to wardrobe — and you can reschedule any pickup with a single text.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Schedule a pickup</h3>
+          <p>Choose a time window that suits you. Leave your bag at the door and we'll collect it — no waiting around.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>We clean &amp; press</h3>
+          <p>Every item is inspected, treated for stains, cleaned, and hand-finished by our team in South Lake Union.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Delivered to your door</h3>
+          <p>We return everything pressed or folded within 48 hours — same day available for an extra $6.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS + FAQ -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <div class="badge">❓ Good to know</div>
+        <h2>Questions, answered</h2>
+        <p>Still curious? Call us at (206) 555-0177 or write to hello@purethreadsea.com.</p>
+      </div>
+
+      <div class="stats-band" style="margin-bottom: 3rem;">
+        <div>
+          <div class="stat-number">1,800+</div>
+          <div class="stat-label">Regular customers</div>
+        </div>
+        <div>
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">Average rating</div>
+        </div>
+        <div>
+          <div class="stat-number">48h</div>
+          <div class="stat-label">Standard turnaround</div>
+        </div>
+        <div>
+          <div class="stat-number">9</div>
+          <div class="stat-label">Years in Seattle</div>
+        </div>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Which areas of Seattle do you serve?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>We cover Capitol Hill, Queen Anne, Ballard, Fremont, South Lake Union, Belltown, and Downtown. Enter your ZIP at checkout and we'll confirm your pickup window instantly.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Is pickup and delivery really free?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Yes — free pickup and delivery on every order over $25. Below that, there's a flat $4 round-trip fee. No fuel surcharges, no minimum-item counts, no surprises.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>What if a stain doesn't come out?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>We'll always tell you honestly before we start if a stain is likely permanent. If we can't remove it, you don't pay for the cleaning of that item. No arguments, no fine print.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>Do you use eco-friendly cleaning products?</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Yes. We use a biodegradable, petroleum-free solvent system and phosphate-free detergents. Our facility recycles 92% of its water and all of our hangers are reused.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / PICKUP -->
+    <section class="section" id="contact">
+      <div class="cta-box">
+        <h2>Get $10 off your first pickup</h2>
+        <p>Leave your email and we'll send a $10 credit plus our pickup schedule for your neighborhood.</p>
+        <form class="subscribe-form" id="subscribeForm">
+          <input type="email" id="emailInput" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit">Claim credit</button>
+        </form>
+        <div class="form-message" id="formMessage"></div>
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: rgba(255,255,255,0.85); position: relative; z-index: 1;">
+          📍 1420 Terry Ave N, Seattle, WA 98109 · 📞 (206) 555-0177
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <span class="logo-mark">👔</span>
+        <span class="logo-text">
+          Pure Thread
+          <small>Cleaners &amp; Laundry</small>
+        </span>
+      </a>
+      <p style="margin-top: 1rem; max-width: 320px;">Locally owned dry cleaning and laundry for Seattle. Hand-finished, eco-conscious, and delivered back to your door.</p>
+    </div>
+    <div>
+      <h4>Visit us</h4>
+      <ul>
+        <li>📍 1420 Terry Ave N</li>
+        <li>Seattle, WA 98109</li>
+        <li>📞 (206) 555-0177</li>
+        <li>✉️ hello@purethreadsea.com</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Opening hours</h4>
+      <ul>
+        <li>Mon–Fri: 7am – 8pm</li>
+        <li>Saturday: 8am – 6pm</li>
+        <li>Sunday: 9am – 3pm</li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Pure Thread Cleaners. Locally owned in Seattle, WA. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- ALL JS -->
+  <script>
+    (function() {
+      // ----- Mobile menu -----
+      const menuToggle = document.getElementById('menuToggle');
+      const mainNav = document.getElementById('mainNav');
+
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          mainNav.classList.toggle('active');
+        });
+
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('active');
+          });
+        });
+      }
+
+      // ----- Garment bag counter -----
+      const cartButton = document.getElementById('cartButton');
+      const cartCount = document.getElementById('cartCount');
+      let count = 0;
+
+      if (cartButton && cartCount) {
+        cartButton.addEventListener('click', function() {
+          count++;
+          cartCount.textContent = count;
+          cartCount.style.transform = 'scale(1.4)';
+          setTimeout(() => {
+            cartCount.style.transform = 'scale(1)';
+          }, 150);
+        });
+      }
+
+      // ----- FAQ accordion -----
+      const accordionItems = document.querySelectorAll('.accordion-item');
+      accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+          item.classList.toggle('active');
+        });
+      });
+
+      // ----- Subscription form validation -----
+      const subscribeForm = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('emailInput');
+      const formMessage = document.getElementById('formMessage');
+
+      if (subscribeForm && emailInput && formMessage) {
+        subscribeForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = emailInput.value.trim();
+
+          if (!email) {
+            formMessage.textContent = 'Please enter your email address.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            formMessage.textContent = 'That email doesn\'t look right. Try name@domain.com.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          formMessage.textContent = '✅ Credit applied! Check your inbox for your $10 code and pickup schedule.';
+          formMessage.style.color = '#fff5ff';
+          emailInput.value = '';
+
+          setTimeout(() => {
+            formMessage.textContent = '';
+          }, 6000);
+        });
+      }
+
+      // ----- Close mobile menu on resize -----
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 760 && mainNav.classList.contains('active')) {
+          mainNav.classList.remove('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Fade & Forge · Barbershop</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23c48b3b'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>⚒</text></svg>">
+  <style>
+    /* ---------- design tokens ---------- */
+    :root {
+      --ink: #1e1b18;
+      --ink-soft: #3a3530;
+      --paper: #faf7f2;
+      --paper-warm: #f3ede4;
+      --accent: #c48b3b;
+      --accent-deep: #a06e2c;
+      --accent-glow: rgba(196, 139, 59, 0.18);
+      --smoke: #6b6259;
+      --line: #e2d9cd;
+      --radius-s: 10px;
+      --radius-m: 18px;
+      --radius-l: 28px;
+      --shadow-s: 0 2px 6px rgba(30, 27, 24, 0.04);
+      --shadow-m: 0 8px 24px rgba(30, 27, 24, 0.07);
+      --shadow-l: 0 18px 40px rgba(30, 27, 24, 0.10);
+      --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      --font-display: 'Georgia', 'Times New Roman', serif;
+      --max-width: 1200px;
+      --gutter: clamp(1rem, 4vw, 2.5rem);
+    }
+
+    /* ---------- reset ---------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    img, svg {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ---------- utilities ---------- */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+    }
+
+    .section {
+      padding-block: clamp(3rem, 8vw, 6rem);
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-deep);
+      background: var(--accent-glow);
+      padding: 0.35em 1em;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.9rem, 1.4rem + 2.2vw, 3rem);
+      line-height: 1.15;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+      max-width: 18ch;
+    }
+
+    .section-sub {
+      color: var(--smoke);
+      max-width: 52ch;
+      font-size: 1.05rem;
+    }
+
+    /* ---------- header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 247, 242, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      padding-block: 0.9rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+
+    .logo-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-s);
+      background: var(--accent);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 10px var(--accent-glow);
+    }
+
+    .logo-text small {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--smoke);
+      font-weight: 600;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .nav-desktop {
+      display: none;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-desktop a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-desktop a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.25s;
+    }
+
+    .nav-desktop a:hover {
+      color: var(--accent-deep);
+    }
+
+    .nav-desktop a:hover::after {
+      width: 100%;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .cart-btn {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-s);
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      background: var(--paper-warm);
+      border: 1px solid var(--line);
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .cart-btn:active {
+      transform: scale(0.94);
+    }
+
+    .cart-btn:hover {
+      background: var(--accent-glow);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--accent-deep);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 100px;
+      display: grid;
+      place-items: center;
+      padding-inline: 5px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .cart-count.bump {
+      transform: scale(1.35);
+    }
+
+    .menu-toggle {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-s);
+      display: grid;
+      place-items: center;
+      background: var(--paper-warm);
+      border: 1px solid var(--line);
+      font-size: 1.3rem;
+    }
+
+    /* mobile nav */
+    .nav-mobile {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+      overflow: hidden;
+      border-top: 0 solid transparent;
+    }
+
+    .nav-mobile.open {
+      grid-template-rows: 1fr;
+      border-top: 1px solid var(--line);
+    }
+
+    .nav-mobile-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .nav-mobile ul {
+      padding: 1rem 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .nav-mobile a {
+      display: block;
+      padding: 0.75rem 0.5rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      border-radius: var(--radius-s);
+      transition: background 0.2s;
+    }
+
+    .nav-mobile a:hover {
+      background: var(--accent-glow);
+      color: var(--accent-deep);
+    }
+
+    @media (min-width: 768px) {
+      .nav-desktop {
+        display: flex;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .nav-mobile {
+        display: none;
+      }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      padding-block: clamp(3.5rem, 10vw, 7rem);
+      background:
+        radial-gradient(ellipse 80% 60% at 90% 10%, rgba(196, 139, 59, 0.10), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 5% 90%, rgba(196, 139, 59, 0.07), transparent 55%),
+        var(--paper);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c48b3b' fill-opacity='0.035'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    @media (min-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 3.5rem;
+      }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 1.6rem + 4vw, 4.2rem);
+      line-height: 1.08;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent-deep);
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .hero h1 em::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0.08em;
+      width: 100%;
+      height: 0.18em;
+      background: var(--accent-glow);
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .hero p {
+      color: var(--smoke);
+      font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+      max-width: 46ch;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85em 1.8em;
+      border-radius: 100px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: transform 0.18s, box-shadow 0.25s, background 0.25s;
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 6px 18px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-deep);
+      box-shadow: 0 10px 26px rgba(196, 139, 59, 0.30);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--line);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent-deep);
+      background: var(--accent-glow);
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .hero-stat span {
+      font-size: 0.8rem;
+      color: var(--smoke);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+
+    /* hero visual */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-card {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-l);
+      background: linear-gradient(145deg, #2c2825 0%, #1e1b18 100%);
+      box-shadow: var(--shadow-l);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(196, 139, 59, 0.25), transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(196, 139, 59, 0.12), transparent 50%);
+    }
+
+    .hero-card-content {
+      position: relative;
+      text-align: center;
+      color: #f3ede4;
+      padding: 2rem;
+    }
+
+    .hero-card-icon {
+      font-size: clamp(3.5rem, 6vw, 5rem);
+      margin-bottom: 0.75rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+    }
+
+    .hero-card-content h3 {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 1rem + 1vw, 1.6rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-card-content p {
+      font-size: 0.82rem;
+      color: rgba(243, 237, 228, 0.6);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.5em 1.1em;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ---------- services ---------- */
+    .services {
+      background: var(--paper-warm);
+      border-block: 1px solid var(--line);
+    }
+
+    .services-grid {
+      display: grid;
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 960px) {
+      .services-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .service-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      padding: 1.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.3s, border-color 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-m);
+      border-color: transparent;
+    }
+
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .service-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .service-card p {
+      font-size: 0.9rem;
+      color: var(--smoke);
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .service-price {
+      font-weight: 700;
+      color: var(--accent-deep);
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .service-price small {
+      font-weight: 500;
+      color: var(--smoke);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- team ---------- */
+    .team-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 960px) {
+      .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .team-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.3s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-m);
+    }
+
+    .team-avatar {
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      font-size: clamp(3rem, 8vw, 4.5rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-avatar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), transparent 60%);
+    }
+
+    .team-avatar.a1 { background: linear-gradient(145deg, #d4a76a, #b07d3a); }
+    .team-avatar.a2 { background: linear-gradient(145deg, #7a6a5a, #4a3f35); }
+    .team-avatar.a3 { background: linear-gradient(145deg, #c48b3b, #8a5e24); }
+
+    .team-info {
+      padding: 1.25rem 1.35rem 1.5rem;
+    }
+
+    .team-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+
+    .team-info .role {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-deep);
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .team-info p {
+      font-size: 0.86rem;
+      color: var(--smoke);
+      line-height: 1.5;
+    }
+
+    /* ---------- tabs / pricing ---------- */
+    .pricing {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .pricing .section-label {
+      color: var(--accent);
+      background: rgba(196, 139, 59, 0.15);
+    }
+
+    .pricing .section-title {
+      color: var(--paper);
+    }
+
+    .pricing .section-sub {
+      color: rgba(250, 247, 242, 0.6);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-block: 2rem 1.75rem;
+    }
+
+    .tab-btn {
+      padding: 0.6em 1.4em;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(250, 247, 242, 0.6);
+      border: 1px solid rgba(250, 247, 242, 0.15);
+      transition: all 0.25s;
+    }
+
+    .tab-btn:hover {
+      color: var(--paper);
+      border-color: rgba(250, 247, 242, 0.35);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeUp 0.35s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .price-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 700px) {
+      .price-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem 2.5rem;
+      }
+    }
+
+    .price-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(250, 247, 242, 0.08);
+    }
+
+    .price-item-name {
+      font-weight: 500;
+      color: rgba(250, 247, 242, 0.9);
+    }
+
+    .price-item-name small {
+      display: block;
+      font-weight: 400;
+      font-size: 0.78rem;
+      color: rgba(250, 247, 242, 0.45);
+      margin-top: 2px;
+    }
+
+    .price-item-value {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* ---------- reviews ---------- */
+    .reviews-grid {
+      display: grid;
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (min-width: 700px) {
+      .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .reviews-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .review-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-m);
+      padding: 1.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.3s;
+    }
+
+    .review-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-m);
+    }
+
+    .review-stars {
+      color: var(--accent);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.85rem;
+    }
+
+    .review-text {
+      font-size: 0.92rem;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      flex-grow: 1;
+      margin-bottom: 1.25rem;
+      font-style: italic;
+    }
+
+    .review-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .review-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .review-avatar.r1 { background: linear-gradient(145deg, #d4a76a, #b07d3a); }
+    .review-avatar.r2 { background: linear-gradient(145deg, #7a6a5a, #4a3f35); }
+    .review-avatar.r3 { background: linear-gradient(145deg, #c48b3b, #8a5e24); }
+
+    .review-author strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .review-author span {
+      font-size: 0.75rem;
+      color: var(--smoke);
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-section {
+      padding-block: clamp(3rem, 8vw, 5rem);
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+      border-radius: var(--radius-l);
+      padding: clamp(2rem, 6vw, 4rem);
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .cta-box > * {
+      position: relative;
+    }
+
+    .cta-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 1.3rem + 2vw, 2.6rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-box p {
+      opacity: 0.85;
+      max-width: 48ch;
+      margin-inline: auto;
+      margin-bottom: 1.75rem;
+      font-size: 1.02rem;
+    }
+
+    .cta-box .btn {
+      background: #fff;
+      color: var(--accent-deep);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      font-weight: 700;
+    }
+
+    .cta-box .btn:hover {
+      background: var(--paper-warm);
+      transform: translateY(-2px);
+    }
+
+    /* ---------- footer ---------- */
+    .site-footer {
+      background: var(--ink);
+      color: rgba(250, 247, 242, 0.75);
+      padding-block: clamp(2.5rem, 6vw, 4rem);
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      gap: 2.5rem;
+    }
+
+    @media (min-width: 700px) {
+      .footer-grid {
+        grid-template-columns: 2fr 1fr 1.2fr;
+        gap: 3rem;
+      }
+    }
+
+    .footer-brand .logo {
+      color: var(--paper);
+      margin-bottom: 1rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      max-width: 36ch;
+      color: rgba(250, 247, 242, 0.55);
+    }
+
+    .footer-col h4 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 1.1rem;
+      font-weight: 700;
+    }
+
+    .footer-col ul {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .footer-col a {
+      font-size: 0.88rem;
+      color: rgba(250, 247, 242, 0.6);
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+    }
+
+    .footer-contact li {
+      font-size: 0.88rem;
+      color: rgba(250, 247, 242, 0.6);
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .footer-contact li span:first-child {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    .footer-bottom {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(250, 247, 242, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: rgba(250, 247, 242, 0.4);
+    }
+
+    /* ---------- newsletter form ---------- */
+    .newsletter {
+      margin-top: 1.25rem;
+    }
+
+    .newsletter-label {
+      font-size: 0.82rem;
+      color: rgba(250, 247, 242, 0.55);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .newsletter-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .newsletter input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.7em 1em;
+      border-radius: var(--radius-s);
+      border: 1px solid rgba(250, 247, 242, 0.18);
+      background: rgba(250, 247, 242, 0.06);
+      color: var(--paper);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .newsletter input::placeholder {
+      color: rgba(250, 247, 242, 0.35);
+    }
+
+    .newsletter input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .newsletter input.invalid {
+      border-color: #e05252;
+      box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.15);
+    }
+
+    .newsletter button {
+      padding: 0.7em 1.2em;
+      border-radius: var(--radius-s);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .newsletter button:hover {
+      background: var(--accent-deep);
+    }
+
+    .newsletter button:active {
+      transform: scale(0.96);
+    }
+
+    .newsletter-msg {
+      font-size: 0.78rem;
+      margin-top: 0.5rem;
+      min-height: 1.2em;
+      transition: opacity 0.3s;
+    }
+
+    .newsletter-msg.error {
+      color: #e05252;
+    }
+
+    .newsletter-msg.success {
+      color: #6ec47a;
+    }
+
+    /* ---------- scroll reveal ---------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======== HEADER ======== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <span class="logo-mark">⚒</span>
+        <span class="logo-text">
+          Fade &amp; Forge
+          <small>Barbershop · Est. 2016</small>
+        </span>
+      </a>
+
+      <nav class="nav-desktop">
+        <a href="#services">Services</a>
+        <a href="#team">Our Team</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#reviews">Reviews</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="cart-btn" id="cartBtn" aria-label="Shopping cart">
+          🛒
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <nav class="nav-mobile" id="navMobile">
+      <div class="nav-mobile-inner">
+        <ul class="container">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#team">Our Team</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ======== HERO ======== -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="section-label">Master barbers since 2016</span>
+          <h1>Sharp cuts,<br><em>honest</em> craft.</h1>
+          <p>Walk in a stranger, walk out a regular. Fade &amp; Forge is a neighbourhood barbershop built on precision, good conversation, and the belief that a great haircut shouldn't cost a fortune.</p>
+          <div class="hero-actions">
+            <a href="#pricing" class="btn btn-primary">📅 Book a chair</a>
+            <a href="#services" class="btn btn-ghost">View services →</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>9+</strong>
+              <span>Years open</span>
+            </div>
+            <div class="hero-stat">
+              <strong>14k</strong>
+              <span>Haircuts given</span>
+            </div>
+            <div class="hero-stat">
+              <strong>4.9★</strong>
+              <span>Average rating</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-content">
+              <div class="hero-card-icon">💈</div>
+              <h3>The Forge Standard</h3>
+              <p>Hot towel · Straight razor · Zero rush</p>
+            </div>
+            <span class="hero-badge">Walk-ins welcome</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== SERVICES ======== -->
+    <section class="section services" id="services">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">What we do</span>
+          <h2 class="section-title">Services built around your head, not a template</h2>
+          <p class="section-sub">Every cut starts with a consultation. No rushing, no guessing — just a clean result that grows out well.</p>
+        </div>
+
+        <div class="services-grid">
+          <article class="service-card reveal">
+            <div class="service-icon">✂️</div>
+            <h3>Signature Cut</h3>
+            <p>Consultation, clipper and scissor work, hot towel finish, and styling advice you can actually repeat at home.</p>
+            <div class="service-price">$38 <small>45 min</small></div>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🪒</div>
+            <h3>Hot Towel Shave</h3>
+            <p>Traditional straight-razor shave with pre-shave oil, hot towels, and a cooling balm. Old-school, done right.</p>
+            <div class="service-price">$32 <small>40 min</small></div>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🧔</div>
+            <h3>Beard Sculpt</h3>
+            <p>Line-up, shape, and condition. We trim to your jawline and growth pattern — not a one-size-fits-all chart.</p>
+            <div class="service-price">$24 <small>30 min</small></div>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">👦</div>
+            <h3>Father &amp; Son</h3>
+            <p>Two chairs, side by side. A cut for dad and a cut for the little one — patience included, fidgeting allowed.</p>
+            <div class="service-price">$52 <small>60 min</small></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TEAM ======== -->
+    <section class="section" id="team">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">The people</span>
+          <h2 class="section-title">Three chairs, three sets of hands</h2>
+          <p class="section-sub">You'll get the same barber every time — unless you want to switch. We won't be offended.</p>
+        </div>
+
+        <div class="team-grid">
+          <article class="team-card reveal">
+            <div class="team-avatar a1">🧑‍🦱</div>
+            <div class="team-info">
+              <h3>Marcus Bell</h3>
+              <div class="role">Founder · Master Barber</div>
+              <p>Opened Fade &amp; Forge after twelve years on the road. Specialises in classic scissor cuts and beard work.</p>
+            </div>
+          </article>
+
+          <article class="team-card reveal">
+            <div class="team-avatar a2">🧑‍🎤</div>
+            <div class="team-info">
+              <h3>Dee Okafor</h3>
+              <div class="role">Senior Barber</div>
+              <p>Fast hands, sharp fades, and a playlist that keeps the shop moving. Ask about the undercut — she's the one to see.</p>
+            </div>
+          </article>
+
+          <article class="team-card reveal">
+            <div class="team-avatar a3">🧑‍🦰</div>
+            <div class="team-info">
+              <h3>Tomás Rivera</h3>
+              <div class="role">Barber · Shave Specialist</div>
+              <p>Straight-razor traditionalist. If you've never had a proper hot towel shave, Tomás will change your mind.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PRICING / TABS ======== -->
+    <section class="section pricing" id="pricing">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">Pricing</span>
+          <h2 class="section-title">No surprises at the till</h2>
+          <p class="section-sub">Prices are per visit, no hidden extras. Card and cash accepted. Student discount on weekdays before 4pm.</p>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" role="tab" aria-selected="true" data-tab="cuts">Cuts</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="shaves">Shaves &amp; Beard</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="extras">Extras</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-cuts" role="tabpanel">
+          <div class="price-list">
+            <div class="price-item">
+              <div class="price-item-name">Skin Fade <small>Clipper fade, scissor blend on top</small></div>
+              <div class="price-item-value">$38</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Classic Taper <small>Clean sides, natural top</small></div>
+              <div class="price-item-value">$34</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Scissor Cut <small>Full scissor work, no clippers</small></div>
+              <div class="price-item-value">$42</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Buzz Cut <small>One length all over</small></div>
+              <div class="price-item-value">$22</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Kids (under 12) <small>Patience included</small></div>
+              <div class="price-item-value">$24</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">OAP Cut <small>Over 65, any style</small></div>
+              <div class="price-item-value">$20</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-shaves" role="tabpanel">
+          <div class="price-list">
+            <div class="price-item">
+              <div class="price-item-name">Hot Towel Shave <small>Full straight-razor shave</small></div>
+              <div class="price-item-value">$32</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Beard Trim <small>Shape and line-up</small></div>
+              <div class="price-item-value">$24</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Beard Sculpt <small>Trim, shape, oil treatment</small></div>
+              <div class="price-item-value">$30</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Head Shave <small>With hot towel finish</small></div>
+              <div class="price-item-value">$28</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Moustache Trim <small>Quick tidy-up</small></div>
+              <div class="price-item-value">$12</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Cut &amp; Beard Combo <small>Signature cut + beard sculpt</small></div>
+              <div class="price-item-value">$58</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-extras" role="tabpanel">
+          <div class="price-list">
+            <div class="price-item">
+              <div class="price-item-name">Hot Towel Treatment <small>Add-on, any service</small></div>
+              <div class="price-item-value">$8</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Eyebrow Shaping <small>Thread or wax</small></div>
+              <div class="price-item-value">$10</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Hair Wash &amp; Style <small>Deep clean + product</small></div>
+              <div class="price-item-value">$14</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Grey Blending <small>Subtle colour, no commitment</small></div>
+              <div class="price-item-value">$22</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Scalp Massage <small>5 minutes of pure calm</small></div>
+              <div class="price-item-value">$10</div>
+            </div>
+            <div class="price-item">
+              <div class="price-item-name">Product (pomade / clay) <small>Take-home tin</small></div>
+              <div class="price-item-value">$18</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== REVIEWS ======== -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="reveal">
+          <span class="section-label">From the chair</span>
+          <h2 class="section-title">What people say when they leave</h2>
+          <p class="section-sub">Unedited reviews from regulars, walk-ins, and the occasional sceptic.</p>
+        </div>
+
+        <div class="reviews-grid">
+          <article class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"I've been to fancy salons that charge three times as much and do half the job. Marcus actually listens, and the fade grows out perfectly every time."</p>
+            <div class="review-author">
+              <div class="review-avatar r1">🧔</div>
+              <div>
+                <strong>James Whitfield</strong>
+                <span>Regular since 2019</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Dee is a magician with clippers. I showed her a photo I thought was impossible and she nailed it in 25 minutes. Plus the playlist is genuinely good."</p>
+            <div class="review-author">
+              <div class="review-avatar r2">🧑</div>
+              <div>
+                <strong>Ryan O'Sullivan</strong>
+                <span>Walk-in, now weekly</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="review-card reveal">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"First proper hot towel shave in years. Tomás takes his time, explains everything, and the result is smoother than anything I've managed at home."</p>
+            <div class="review-author">
+              <div class="review-avatar r3">👨‍🦳</div>
+              <div>
+                <strong>David Chen</strong>
+                <span>First visit, will return</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== CTA ======== -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-box reveal">
+          <h2>Chair's ready when you are.</h2>
+          <p>No booking app, no chatbot, no nonsense. Call the shop, drop us a message, or just walk in — we'll fit you in.</p>
+          <a href="tel:+15551234567" class="btn">📞 Call the shop</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <span class="logo-mark">⚒</span>
+            <span class="logo-text">
+              Fade &amp; Forge
+              <small>Barbershop · Est. 2016</small>
+            </span>
+          </a>
+          <p>Sharp cuts, honest craft. A neighbourhood barbershop in the heart of Portland's Eastside — three chairs, no appointments, and a kettle that's always on.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#team">Our Team</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Find us</h4>
+          <ul class="footer-contact">
+            <li><span>📍</span> 2147 SE Hawthorne Blvd, Portland, OR 97214</li>
+            <li><span>📞</span> <a href="tel:+15551234567">(555) 123-4567</a></li>
+            <li><span>✉️</span> <a href="mailto:hello@fadeandforge.shop">hello@fadeandforge.shop</a></li>
+            <li><span>🕐</span> Mon–Sat 9am–7pm · Sun 10am–4pm</li>
+          </ul>
+
+          <div class="newsletter">
+            <label class="newsletter-label" for="newsletterEmail">Get seasonal offers — no spam</label>
+            <div class="newsletter-row">
+              <input type="email" id="newsletterEmail" placeholder="you@email.com" aria-label="Email address">
+              <button type="button" id="newsletterBtn">Join</button>
+            </div>
+            <div class="newsletter-msg" id="newsletterMsg" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2025 Fade &amp; Forge Barbershop. All rights reserved.</span>
+        <span>Built with care in Portland, OR.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======== SCRIPT ======== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ---------- mobile menu ---------- */
+      const menuToggle = document.getElementById('menuToggle');
+      const navMobile = document.getElementById('navMobile');
+
+      menuToggle.addEventListener('click', function () {
+        const isOpen = navMobile.classList.toggle('open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.textContent = isOpen ? '✕' : '☰';
+      });
+
+      navMobile.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          navMobile.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.textContent = '☰';
+        });
+      });
+
+      /* ---------- tabs ---------- */
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+
+      tabButtons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-tab');
+
+          tabButtons.forEach(function (b) {
+            b.classList.remove('active');
+            b.setAttribute('aria-selected', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+
+          tabPanels.forEach(function (panel) {
+            panel.classList.remove('active');
+          });
+          const activePanel = document.getElementById('panel-' + target);
+          if (activePanel) {
+            activePanel.classList.add('active');
+          }
+        });
+      });
+
+      /* ---------- cart counter ---------- */
+      const cartBtn = document.getElementById('cartBtn');
+      const cartCountEl = document.getElementById('cartCount');
+      let count = 0;
+
+      cartBtn.addEventListener('click', function () {
+        count += 1;
+        cartCountEl.textContent = String(count);
+
+        cartCountEl.classList.add('bump');
+        setTimeout(function () {
+          cartCountEl.classList.remove('bump');
+        }, 300);
+      });
+
+      /* ---------- newsletter validation ---------- */
+      const emailInput = document.getElementById('newsletterEmail');
+      const newsletterBtn = document.getElementById('newsletterBtn');
+      const msgEl = document.getElementById('newsletterMsg');
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+      function showMessage(text, type) {
+        msgEl.textContent = text;
+        msgEl.className = 'newsletter-msg ' + type;
+      }
+
+      newsletterBtn.addEventListener('click', function () {
+        const value = emailInput.value.trim();
+
+        if (value === '') {
+          emailInput.classList.add('invalid');
+          showMessage('Please enter your email address.', 'error');
+          return;
+        }
+
+        if (!emailPattern.test(value)) {
+          emailInput.classList.add('invalid');
+          showMessage('That doesn\'t look like a valid email. Try again?', 'error');
+          return;
+        }
+
+        emailInput.classList.remove('invalid');
+        showMessage('Thanks! You\'re on the list. Check your inbox for a welcome note.', 'success');
+        emailInput.value = '';
+      });
+
+      emailInput.addEventListener('input', function () {
+        if (emailInput.classList.contains('invalid')) {
+          emailInput.classList.remove('invalid');
+          msgEl.textContent = '';
+          msgEl.className = 'newsletter-msg';
+        }
+      });
+
+      emailInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          newsletterBtn.click();
+        }
+      });
+
+      /* ---------- scroll reveal ---------- */
+      const revealElements = document.querySelectorAll('.reveal');
+
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -30px 0px' }
+        );
+
+        revealElements.forEach(function (el) {
+          observer.observe(el);
+        });
+      } else {
+        revealElements.forEach(function (el) {
+          el.classList.add('visible');
+        });
+      }
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NightOwl Quest Rooms · Escape games in Brooklyn</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%237c3aed'/><text x='50' y='72' font-size='60' fill='white' text-anchor='middle' font-family='system-ui,sans-serif'>🔦</text></svg>">
+  <style>
+    /* ---------- CSS variables: custom palette ---------- */
+    :root {
+      --primary: #7c3aed;        /* violet */
+      --primary-dark: #5b21b6;
+      --accent: #f59e0b;         /* amber glow */
+      --accent-soft: #fef3c7;
+      --danger: #dc2626;
+      --bg: #0d0a16;             /* deep night */
+      --surface: #171127;
+      --surface-2: #1f1735;
+      --text: #f5f3ff;
+      --text-light: #a99fc7;
+      --border: #2e2350;
+      --shadow-sm: 0 6px 18px -6px rgba(0, 0, 0, 0.6);
+      --shadow-md: 0 20px 40px -14px rgba(124, 58, 237, 0.35);
+      --shadow-glow: 0 0 40px -8px rgba(245, 158, 11, 0.4);
+      --radius-sm: 12px;
+      --radius-md: 22px;
+      --radius-lg: 34px;
+      --radius-pill: 999px;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ---------- global reset & base ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(124, 58, 237, 0.18), transparent 55%),
+        radial-gradient(ellipse at 85% 100%, rgba(245, 158, 11, 0.10), transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 0 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* ---------- typography ---------- */
+    h1, h2, h3 {
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 7.5vw, 3.9rem);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: var(--text-light);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- utility ---------- */
+    .section {
+      padding: 4rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+      max-width: 720px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(124, 58, 237, 0.18);
+      border: 1px solid rgba(124, 58, 237, 0.45);
+      color: #c4b5fd;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    /* ---------- header / nav ---------- */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      background: rgba(13, 10, 22, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .logo-text small {
+      display: block;
+      font-size: 0.66rem;
+      font-weight: 500;
+      color: var(--text-light);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .nav a:hover {
+      color: var(--accent);
+    }
+
+    .cart-btn {
+      background: var(--accent);
+      border: none;
+      color: #1a1200;
+      font-weight: 800;
+      padding: 0.55rem 1.15rem;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .cart-btn:hover {
+      background: #fbbf24;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .cart-count {
+      background: var(--primary-dark);
+      color: white;
+      border-radius: var(--radius-pill);
+      padding: 0.05rem 0.5rem;
+      font-size: 0.76rem;
+      font-weight: 800;
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* ---------- mobile menu ---------- */
+    @media (max-width: 760px) {
+      .nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.1rem;
+        padding: 1.2rem 0 0.5rem;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+      }
+
+      .nav.active {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .cart-btn {
+        margin-left: auto;
+      }
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding: 3rem 0 4rem;
+    }
+
+    @media (min-width: 820px) {
+      .hero {
+        flex-direction: row;
+        align-items: center;
+        gap: 4rem;
+      }
+
+      .hero-content {
+        flex: 1.05;
+      }
+
+      .hero-visual {
+        flex: 0.95;
+      }
+    }
+
+    .hero-content p {
+      font-size: 1.18rem;
+      max-width: 540px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      padding: 0.9rem 2rem;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: all 0.2s;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: #1a1200;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 1.2rem;
+    }
+
+    .hero-visual {
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      aspect-ratio: 1 / 0.92;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+      background: linear-gradient(150deg, #1b1233 0%, #0d0a16 100%);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    .hero-visual::after {
+      content: '';
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25), transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(20px);
+    }
+
+    .hero-card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .hero-card .lamp {
+      font-size: 4rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+      display: block;
+      filter: drop-shadow(0 0 22px rgba(245, 158, 11, 0.8));
+      animation: flicker 3s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      45% { opacity: 0.9; }
+      50% { opacity: 0.65; }
+      55% { opacity: 0.95; }
+    }
+
+    .hero-card h3 {
+      color: var(--text);
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-card p {
+      color: var(--text-light);
+      font-size: 0.95rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-difficulty {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-difficulty span {
+      border: 1px solid var(--border);
+      background: rgba(124, 58, 237, 0.12);
+      border-radius: var(--radius-pill);
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #c4b5fd;
+    }
+
+    /* ---------- rooms grid ---------- */
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    @media (min-width: 620px) {
+      .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .rooms-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .room-card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .room-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .room-art {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .room-art::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(13, 10, 22, 0.85) 100%);
+    }
+
+    .room-art span {
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
+    }
+
+    .room-body {
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .room-body p {
+      flex: 1;
+    }
+
+    .room-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+      padding-top: 1.2rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .room-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .difficulty {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .diff-dots {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .diff-dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--border);
+      display: block;
+    }
+
+    .diff-dots i.on {
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+    }
+
+    /* ---------- stats band ---------- */
+    .stats-band {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (min-width: 720px) {
+      .stats-band {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-number {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.85rem;
+      margin-top: 0.3rem;
+    }
+
+    /* ---------- reviews / accordion ---------- */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .accordion-item {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .accordion-item.active {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.6rem;
+      cursor: pointer;
+      font-weight: 600;
+      background: var(--surface);
+      transition: background 0.2s;
+      color: var(--text);
+      gap: 1rem;
+    }
+
+    .accordion-header:hover {
+      background: var(--surface-2);
+    }
+
+    .accordion-header .icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      transition: transform 0.25s;
+      color: var(--accent);
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+
+    .accordion-item.active .accordion-header .icon {
+      transform: rotate(45deg);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 1.6rem;
+      background: var(--surface);
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 260px;
+      padding: 0 1.6rem 1.5rem;
+    }
+
+    .accordion-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .accordion-content .author {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- CTA ---------- */
+    .cta-box {
+      background: linear-gradient(140deg, var(--primary-dark) 0%, #2e1065 100%);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-box::before {
+      content: '🔦';
+      position: absolute;
+      font-size: 15rem;
+      left: -3rem;
+      bottom: -5rem;
+      opacity: 0.07;
+      pointer-events: none;
+      line-height: 1;
+      transform: rotate(-15deg);
+    }
+
+    .cta-box h2 {
+      color: white;
+      margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-box p {
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 2rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subscribe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 560px) {
+      .subscribe-form {
+        flex-direction: row;
+      }
+    }
+
+    .subscribe-form input {
+      flex: 1;
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius-pill);
+      border: 2px solid transparent;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+      background: #0d0a16;
+      color: var(--text);
+    }
+
+    .subscribe-form input::placeholder {
+      color: var(--text-light);
+    }
+
+    .subscribe-form input:focus {
+      border-color: var(--accent);
+    }
+
+    .subscribe-form button {
+      background: var(--accent);
+      color: #1a1200;
+      font-weight: 800;
+      padding: 0.95rem 2rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .subscribe-form button:hover {
+      background: #fbbf24;
+      transform: scale(1.02);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .form-message {
+      margin-top: 1.2rem;
+      font-size: 0.95rem;
+      min-height: 1.5rem;
+      color: #fef3c7;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+      padding: 3rem 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      color: var(--text-light);
+    }
+
+    @media (min-width: 720px) {
+      .footer {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 1rem;
+    }
+
+    .footer h4 {
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer ul {
+      list-style: none;
+    }
+
+    .footer li {
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .footer a {
+      color: var(--text-light);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    /* ---------- misc ---------- */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-mark">🔦</span>
+      <span class="logo-text">
+        NightOwl
+        <small>Quest Rooms</small>
+      </span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    <nav class="nav" id="mainNav">
+      <a href="#rooms">Rooms</a>
+      <a href="#why">Why us</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Book</a>
+      <button class="cart-btn" id="cartButton" aria-label="Booking cart">
+        🎟 Book <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">🗝 Brooklyn · 60-minute live escape games</div>
+        <h1>Can you get out before the clock runs out?</h1>
+        <p>Four immersive rooms, real props, live actors on weekends, and puzzles designed by escape-room world champions. Grab your crew — the door locks in 60 minutes.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn">Book a room</a>
+          <a href="#rooms" class="btn btn-outline">See all rooms</a>
+        </div>
+        <div class="hero-note">
+          ⭐ 4.9 / 5 from 3,400+ players · Groups of 2–8 · Ages 12+
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <span class="lamp">🔦</span>
+          <h3>The clock is ticking</h3>
+          <p>Every room is a self-contained story. Find the clues, crack the code, and escape before the timer hits zero.</p>
+          <div class="hero-difficulty">
+            <span>Beginner</span>
+            <span>Advanced</span>
+            <span>Expert</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROOMS -->
+    <section class="section" id="rooms">
+      <div class="section-header">
+        <div class="badge">🚪 Our rooms</div>
+        <h2>Four worlds. Four ways out.</h2>
+        <p>Each room is a fully themed experience with original props, sound design, and a difficulty rating so you can pick your challenge.</p>
+      </div>
+      <div class="rooms-grid">
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #1e1b4b, #312e81);">
+            <span>📜</span>
+          </div>
+          <div class="room-body">
+            <h3>The Alchemist's Study</h3>
+            <p>A vanished scholar left behind a locked study and a formula that could change everything. Decode his notes before his rivals arrive.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 2–6 players</span>
+              <span>⏱ 60 min</span>
+              <span>🧠 Beginner+</span>
+            </div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #450a0a, #7f1d1d);">
+            <span>🚂</span>
+          </div>
+          <div class="room-body">
+            <h3>Midnight Express</h3>
+            <p>You've boarded the wrong train. The carriage is sealed, the conductor is missing, and something in the luggage car is ticking.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 3–8 players</span>
+              <span>⏱ 60 min</span>
+              <span>🧠 Intermediate</span>
+            </div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #052e16, #166534);">
+            <span>🧪</span>
+          </div>
+          <div class="room-body">
+            <h3>Lab 7: Quarantine</h3>
+            <p>A research lab has gone dark. You're the recovery team — find the antidote, restore power, and get out before containment fails.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 4–8 players</span>
+              <span>⏱ 70 min</span>
+              <span>🧠 Advanced</span>
+            </div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #0c4a6e, #0369a1);">
+            <span>⚓</span>
+          </div>
+          <div class="room-body">
+            <h3>The Sunken Galleon</h3>
+            <p>You've found the wreck of the Santa Elena. The treasure is real — so is the rising tide. Salvage what you can and surface in time.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 2–6 players</span>
+              <span>⏱ 60 min</span>
+              <span>🧠 Intermediate</span>
+            </div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
+            <span>🎭</span>
+          </div>
+          <div class="room-body">
+            <h3>Backstage at the Varieté</h3>
+            <p>1927. The star performer has disappeared minutes before the show. Search the dressing rooms and find her before the curtain rises.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 2–6 players</span>
+              <span>⏱ 60 min</span>
+              <span>🧠 Beginner+</span>
+            </div>
+          </div>
+        </div>
+        <div class="room-card">
+          <div class="room-art" style="background: linear-gradient(135deg, #7c2d12, #c2410c);">
+            <span>🏚</span>
+          </div>
+          <div class="room-body">
+            <h3>The Hollow House</h3>
+            <p>Every family that moves into 13 Ravenwood Lane disappears. You have one hour to find out why — and to leave. Live actor on weekends.</p>
+            <div class="difficulty">
+              <span>Difficulty</span>
+              <span class="diff-dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+            </div>
+            <div class="room-meta">
+              <span>👥 4–8 players</span>
+              <span>⏱ 75 min</span>
+              <span>🧠 Expert</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY US -->
+    <section class="section" id="why">
+      <div class="section-header">
+        <div class="badge">⭐ Why NightOwl</div>
+        <h2>Built by players, for players</h2>
+        <p>We've played hundreds of rooms around the world — and designed ours to fix everything we didn't like.</p>
+      </div>
+      <div class="stats-band" style="margin-bottom: 3rem;">
+        <div>
+          <div class="stat-number">3,400+</div>
+          <div class="stat-label">Teams played</div>
+        </div>
+        <div>
+          <div class="stat-number">4.9</div>
+          <div class="stat-label">Average rating</div>
+        </div>
+        <div>
+          <div class="stat-number">27%</div>
+          <div class="stat-label">Escape rate</div>
+        </div>
+        <div>
+          <div class="stat-number">6</div>
+          <div class="stat-label">Original rooms</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section" id="reviews">
+      <div class="section-header">
+        <div class="badge">💬 Player reviews</div>
+        <h2>What teams are saying</h2>
+        <p>Over 3,400 games played and a 4.9 average — here's what people tell us after the door opens.</p>
+      </div>
+
+      <div class="accordion" id="reviewsAccordion">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“Best escape room we've ever done — and we've done a lot.”</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>The set design in Lab 7 is unreal. Real lab equipment, working electronics, and puzzles that actually make sense. We escaped with 4 minutes to spare and immediately booked another room.</p>
+            <p class="author">— Marcus T., team of 5 · Lab 7: Quarantine</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“Took my team for a work outing and it was perfect.”</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Eight of us split into two groups and raced in parallel rooms. The staff was great, the briefing was smooth, and everyone — from the engineers to the designers — had something to do. Great team-building.</p>
+            <p class="author">— Priya R., office team of 8 · Midnight Express</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“The live actor in Hollow House genuinely scared us.”</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>We're not easily spooked, but the atmosphere in The Hollow House is on another level. Sound, lighting, the actor — it all works. We didn't escape, and we didn't even care. Already planning our rematch.</p>
+            <p class="author">— Elena & friends · The Hollow House</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <span>“Perfect for a birthday — they made it feel special.”</span>
+            <span class="icon">+</span>
+          </div>
+          <div class="accordion-content">
+            <p>Booked The Sunken Galleon for my son's 14th birthday. The team decorated the lobby, gave him a little "captain's log" as a souvenir, and took a group photo at the end. Really thoughtful touches.</p>
+            <p class="author">— Daniel W., birthday group · The Sunken Galleon</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / BOOK -->
+    <section class="section" id="contact">
+      <div class="cta-box">
+        <h2>Lock in your team's spot</h2>
+        <p>Leave your email and we'll send you booking options, group rates, and a promo code for your first game.</p>
+        <form class="subscribe-form" id="subscribeForm">
+          <input type="email" id="emailInput" placeholder="your@email.com" aria-label="Email address" required>
+          <button type="submit">Send booking info</button>
+        </form>
+        <div class="form-message" id="formMessage"></div>
+        <p style="margin-top: 2rem; font-size: 0.95rem; color: rgba(255,255,255,0.85); position: relative; z-index: 1;">
+          📍 118 Greenpoint Ave, Brooklyn, NY 11222 · 📞 (718) 555-0193
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">
+      <a href="#" class="logo">
+        <span class="logo-mark">🔦</span>
+        <span class="logo-text">
+          NightOwl
+          <small>Quest Rooms</small>
+        </span>
+      </a>
+      <p style="margin-top: 1rem; max-width: 320px;">Immersive escape games in Greenpoint, Brooklyn. Built by escape-room enthusiasts, powered by teamwork and a ticking clock.</p>
+    </div>
+    <div>
+      <h4>Find us</h4>
+      <ul>
+        <li>📍 118 Greenpoint Ave</li>
+        <li>Brooklyn, NY 11222</li>
+        <li>📞 (718) 555-0193</li>
+        <li>✉️ play@nightowlrooms.nyc</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Game hours</h4>
+      <ul>
+        <li>Mon–Thu: 3pm – 11pm</li>
+        <li>Fri: 3pm – 1am</li>
+        <li>Sat–Sun: 11am – 1am</li>
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      © 2025 NightOwl Quest Rooms. All rights reserved. · Brooklyn, NY · Est. 2018
+    </div>
+  </footer>
+
+  <!-- ALL JS -->
+  <script>
+    (function() {
+      // ----- Mobile menu -----
+      const menuToggle = document.getElementById('menuToggle');
+      const mainNav = document.getElementById('mainNav');
+
+      if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          mainNav.classList.toggle('active');
+        });
+
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            mainNav.classList.remove('active');
+          });
+        });
+      }
+
+      // ----- Booking cart counter -----
+      const cartButton = document.getElementById('cartButton');
+      const cartCount = document.getElementById('cartCount');
+      let count = 0;
+
+      if (cartButton && cartCount) {
+        cartButton.addEventListener('click', function() {
+          count++;
+          cartCount.textContent = count;
+          cartCount.style.transform = 'scale(1.4)';
+          setTimeout(() => {
+            cartCount.style.transform = 'scale(1)';
+          }, 150);
+        });
+      }
+
+      // ----- Reviews accordion -----
+      const accordionItems = document.querySelectorAll('.accordion-item');
+      accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        if (!header) return;
+
+        header.addEventListener('click', () => {
+          item.classList.toggle('active');
+        });
+      });
+
+      // ----- Subscription form validation -----
+      const subscribeForm = document.getElementById('subscribeForm');
+      const emailInput = document.getElementById('emailInput');
+      const formMessage = document.getElementById('formMessage');
+
+      if (subscribeForm && emailInput && formMessage) {
+        subscribeForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = emailInput.value.trim();
+
+          if (!email) {
+            formMessage.textContent = 'Please enter your email address.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailPattern.test(email)) {
+            formMessage.textContent = 'That email doesn\'t look right. Try name@domain.com.';
+            formMessage.style.color = '#ffd7d7';
+            return;
+          }
+
+          formMessage.textContent = '✅ Booking info sent! Check your inbox for your promo code.';
+          formMessage.style.color = '#fef3c7';
+          emailInput.value = '';
+
+          setTimeout(() => {
+            formMessage.textContent = '';
+          }, 6000);
+        });
+      }
+
+      // ----- Close mobile menu on resize -----
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 760 && mainNav.classList.contains('active')) {
+          mainNav.classList.remove('active');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
